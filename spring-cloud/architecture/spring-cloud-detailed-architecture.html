@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring Cloud Detailed Architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'JetBrains Mono', monospace; background: #020617; min-height: 100vh; padding: 1.5rem; color: white; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .header { margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+    .pulse-dot { width: 12px; height: 12px; background: #22d3ee; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    h1 { font-size: 1.5rem; font-weight: 700; }
+    .subtitle { color: #94a3b8; font-size: 0.875rem; margin-left: 0.5rem; }
+    .diagram-container { background: rgba(15, 23, 42, 0.5); border-radius: 1rem; border: 1px solid #1e293b; padding: 1rem; overflow-x: auto; }
+    svg { width: 100%; min-width: 1600px; display: block; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .card { background: rgba(15, 23, 42, 0.5); border-radius: 0.75rem; border: 1px solid #1e293b; padding: 1rem; }
+    .card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .card-dot.cyan { background: #22d3ee; }
+    .card-dot.emerald { background: #34d399; }
+    .card-dot.violet { background: #a78bfa; }
+    .card-dot.amber { background: #fbbf24; }
+    .card-dot.rose { background: #fb7185; }
+    .card-dot.orange { background: #fb923c; }
+    .card-dot.sky { background: #38bdf8; }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul { list-style: none; color: #94a3b8; font-size: 0.7rem; }
+    .card li { margin-bottom: 0.25rem; }
+    .footer { text-align: center; margin-top: 1.5rem; color: #475569; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="pulse-dot"></div>
+      <h1>Spring Cloud Microservices Architecture</h1>
+      <span class="subtitle">完整微服务架构图 - 30+ 组件</span>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 1600 900">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <marker id="arrow-cyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#22d3ee" />
+          </marker>
+          <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#34d399" />
+          </marker>
+          <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#a78bfa" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- ==================== CLIENT LAYER ==================== -->
+        <text x="30" y="40" fill="#94a3b8" font-size="11" font-weight="600">CLIENT LAYER</text>
+        
+        <!-- Web Client -->
+        <rect x="30" y="55" width="80" height="45" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1"/>
+        <text x="70" y="75" fill="white" font-size="9" font-weight="600" text-anchor="middle">Web</text>
+        <text x="70" y="88" fill="#94a3b8" font-size="7" text-anchor="middle">Browser</text>
+        
+        <!-- Mobile Client -->
+        <rect x="120" y="55" width="80" height="45" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1"/>
+        <text x="160" y="75" fill="white" font-size="9" font-weight="600" text-anchor="middle">Mobile</text>
+        <text x="160" y="88" fill="#94a3b8" font-size="7" text-anchor="middle">iOS/Android</text>
+        
+        <!-- Third Party API -->
+        <rect x="210" y="55" width="80" height="45" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1"/>
+        <text x="250" y="75" fill="white" font-size="9" font-weight="600" text-anchor="middle">API</text>
+        <text x="250" y="88" fill="#94a3b8" font-size="7" text-anchor="middle">3rd Party</text>
+
+        <!-- ==================== CDN & LOAD BALANCER ==================== -->
+        <text x="330" y="40" fill="#94a3b8" font-size="11" font-weight="600">EDGE LAYER</text>
+        
+        <!-- CDN -->
+        <rect x="330" y="50" width="90" height="50" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="375" y="70" fill="white" font-size="9" font-weight="600" text-anchor="middle">CDN</text>
+        <text x="375" y="85" fill="#94a3b8" font-size="7" text-anchor="middle">CloudFront</text>
+        
+        <!-- Load Balancer -->
+        <rect x="430" y="50" width="90" height="50" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="475" y="70" fill="white" font-size="9" font-weight="600" text-anchor="middle">Load</text>
+        <text x="475" y="85" fill="white" font-size="9" font-weight="600" text-anchor="middle">Balancer</text>
+        
+        <!-- Arrows: Clients -> CDN -> LB -->
+        <line x1="110" y1="77" x2="175" y2="77" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="250" y1="77" x2="328" y2="77" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="420" y1="75" x2="428" y2="75" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- ==================== GATEWAY LAYER ==================== -->
+        <text x="550" y="40" fill="#22d3ee" font-size="11" font-weight="600">GATEWAY LAYER</text>
+        
+        <!-- Spring Cloud Gateway -->
+        <rect x="550" y="50" width="130" height="55" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="2"/>
+        <text x="615" y="72" fill="white" font-size="10" font-weight="600" text-anchor="middle">Spring Cloud</text>
+        <text x="615" y="87" fill="white" font-size="10" font-weight="600" text-anchor="middle">Gateway</text>
+        
+        <!-- Gateway Features -->
+        <rect x="690" y="50" width="100" height="55" rx="6" fill="rgba(8, 51, 68, 0.3)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="740" y="72" fill="#22d3ee" font-size="8" text-anchor="middle">Rate Limit</text>
+        <text x="740" y="85" fill="#94a3b8" font-size="7" text-anchor="middle">Auth Check</text>
+        <text x="740" y="97" fill="#94a3b8" font-size="7" text-anchor="middle">Route</text>
+        
+        <!-- Arrow: LB -> Gateway -->
+        <line x1="520" y1="75" x2="548" y2="75" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+
+        <!-- ==================== AUTH LAYER ==================== -->
+        <text x="810" y="40" fill="#fb7185" font-size="11" font-weight="600">AUTH LAYER</text>
+        
+        <!-- OAuth2 Server -->
+        <rect x="810" y="50" width="100" height="50" rx="6" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
+        <text x="860" y="70" fill="white" font-size="9" font-weight="600" text-anchor="middle">OAuth2</text>
+        <text x="860" y="85" fill="#94a3b8" font-size="7" text-anchor="middle">Server</text>
+        
+        <!-- JWT -->
+        <rect x="920" y="50" width="80" height="50" rx="6" fill="rgba(136, 19, 55, 0.3)" stroke="#fb7185" stroke-width="1"/>
+        <text x="960" y="70" fill="white" font-size="9" font-weight="600" text-anchor="middle">JWT</text>
+        <text x="960" y="85" fill="#94a3b8" font-size="7" text-anchor="middle">Token</text>
+        
+        <!-- Arrow: Gateway -> OAuth2 -->
+        <line x1="680" y1="75" x2="810" y2="75" stroke="#fb7185" stroke-width="1" stroke-dasharray="4,4" marker-end="url(#arrow)"/>
+
+        <!-- ==================== SERVICE REGISTRY ==================== -->
+        <text x="810" y="150" fill="#fb7185" font-size="11" font-weight="600">REGISTRY & CONFIG</text>
+        
+        <!-- Eureka/Nacos -->
+        <rect x="810" y="165" width="100" height="50" rx="6" fill="rgba(136, 19, 55, 0.5)" stroke="#fb7185" stroke-width="2"/>
+        <text x="860" y="185" fill="white" font-size="9" font-weight="600" text-anchor="middle">Eureka</text>
+        <text x="860" y="202" fill="#94a3b8" font-size="7" text-anchor="middle">Service Registry</text>
+        
+        <!-- Nacos -->
+        <rect x="810" y="225" width="100" height="40" rx="6" fill="rgba(136, 19, 55, 0.3)" stroke="#fb7185" stroke-width="1"/>
+        <text x="860" y="245" fill="white" font-size="8" font-weight="600" text-anchor="middle">Nacos (Alt)</text>
+        
+        <!-- Config Server -->
+        <rect x="810" y="275" width="100" height="50" rx="6" fill="rgba(136, 19, 55, 0.5)" stroke="#fb7185" stroke-width="2"/>
+        <text x="860" y="295" fill="white" font-size="9" font-weight="600" text-anchor="middle">Config</text>
+        <text x="860" y="312" fill="#94a3b8" font-size="7" text-anchor="middle">Server</text>
+        
+        <!-- Git Repository -->
+        <rect x="810" y="335" width="100" height="40" rx="6" fill="rgba(136, 19, 55, 0.3)" stroke="#fb7185" stroke-width="1"/>
+        <text x="860" y="355" fill="#94a3b8" font-size="8" text-anchor="middle">Git Config Repo</text>
+
+        <!-- ==================== MICROSERVICES ==================== -->
+        <text x="30" y="180" fill="#34d399" font-size="11" font-weight="600">MICROSERVICES</text>
+        
+        <!-- Order Service -->
+        <rect x="30" y="200" width="120" height="65" rx="6" fill="rgba(6, 78, 59, 0.5)" stroke="#34d399" stroke-width="2"/>
+        <text x="90" y="225" fill="white" font-size="10" font-weight="600" text-anchor="middle">Order Service</text>
+        <text x="90" y="242" fill="#94a3b8" font-size="7" text-anchor="middle">Spring Boot</text>
+        <text x="90" y="257" fill="#34d399" font-size="7" text-anchor="middle">:8081</text>
+        
+        <!-- User Service -->
+        <rect x="160" y="200" width="120" height="65" rx="6" fill="rgba(6, 78, 59, 0.5)" stroke="#34d399" stroke-width="2"/>
+        <text x="220" y="225" fill="white" font-size="10" font-weight="600" text-anchor="middle">User Service</text>
+        <text x="220" y="242" fill="#94a3b8" font-size="7" text-anchor="middle">Spring Boot</text>
+        <text x="220" y="257" fill="#34d399" font-size="7" text-anchor="middle">:8082</text>
+        
+        <!-- Product Service -->
+        <rect x="290" y="200" width="120" height="65" rx="6" fill="rgba(6, 78, 59, 0.5)" stroke="#34d399" stroke-width="2"/>
+        <text x="350" y="225" fill="white" font-size="10" font-weight="600" text-anchor="middle">Product Service</text>
+        <text x="350" y="242" fill="#94a3b8" font-size="7" text-anchor="middle">Spring Boot</text>
+        <text x="350" y="257" fill="#34d399" font-size="7" text-anchor="middle">:8083</text>
+        
+        <!-- Payment Service -->
+        <rect x="420" y="200" width="120" height="65" rx="6" fill="rgba(6, 78, 59, 0.5)" stroke="#34d399" stroke-width="2"/>
+        <text x="480" y="225" fill="white" font-size="10" font-weight="600" text-anchor="middle">Payment</text>
+        <text x="480" y="242" fill="white" font-size="10" font-weight="600" text-anchor="middle">Service</text>
+        <text x="480" y="257" fill="#34d399" font-size="7" text-anchor="middle">:8084</text>
+        
+        <!-- Notification Service -->
+        <rect x="550" y="200" width="120" height="65" rx="6" fill="rgba(6, 78, 59, 0.5)" stroke="#34d399" stroke-width="2"/>
+        <text x="610" y="225" fill="white" font-size="10" font-weight="600" text-anchor="middle">Notification</text>
+        <text x="610" y="242" fill="#94a3b8" font-size="7" text-anchor="middle">Service</text>
+        <text x="610" y="257" fill="#34d399" font-size="7" text-anchor="middle">:8085</text>
+        
+        <!-- Inventory Service -->
+        <rect x="30" y="280" width="120" height="55" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="90" y="302" fill="white" font-size="9" font-weight="600" text-anchor="middle">Inventory</text>
+        <text x="90" y="318" fill="#94a3b8" font-size="7" text-anchor="middle">Service :8086</text>
+        
+        <!-- Shipping Service -->
+        <rect x="160" y="280" width="120" height="55" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="220" y="302" fill="white" font-size="9" font-weight="600" text-anchor="middle">Shipping</text>
+        <text x="220" y="318" fill="#94a3b8" font-size="7" text-anchor="middle">Service :8087</text>
+        
+        <!-- Review Service -->
+        <rect x="290" y="280" width="120" height="55" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="350" y="302" fill="white" font-size="9" font-weight="600" text-anchor="middle">Review</text>
+        <text x="350" y="318" fill="#94a3b8" font-size="7" text-anchor="middle">Service :8088</text>
+        
+        <!-- Search Service -->
+        <rect x="420" y="280" width="120" height="55" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="480" y="302" fill="white" font-size="9" font-weight="600" text-anchor="middle">Search</text>
+        <text x="480" y="318" fill="#94a3b8" font-size="7" text-anchor="middle">Service :8089</text>
+        
+        <!-- Cart Service -->
+        <rect x="550" y="280" width="120" height="55" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="610" y="302" fill="white" font-size="9" font-weight="600" text-anchor="middle">Cart Service</text>
+        <text x="610" y="318" fill="#94a3b8" font-size="7" text-anchor="middle">:8090</text>
+
+        <!-- Arrows: Gateway -> Services -->
+        <line x1="740" y1="77" x2="100" y2="200" stroke="#22d3ee" stroke-width="1" marker-end="url(#arrow-cyan)"/>
+        <line x1="740" y1="77" x2="230" y2="200" stroke="#22d3ee" stroke-width="1" marker-end="url(#arrow-cyan)"/>
+        <line x1="740" y1="77" x2="360" y2="200" stroke="#22d3ee" stroke-width="1" marker-end="url(#arrow-cyan)"/>
+        <line x1="740" y1="77" x2="490" y2="200" stroke="#22d3ee" stroke-width="1" marker-end="url(#arrow-cyan)"/>
+        <line x1="740" y1="77" x2="620" y2="200" stroke="#22d3ee" stroke-width="1" marker-end="url(#arrow-cyan)"/>
+
+        <!-- Service -> Registry -->
+        <line x1="90" y1="265" x2="90" y2="290" stroke="#fb7185" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="220" y1="265" x2="220" y2="290" stroke="#fb7185" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="350" y1="265" x2="350" y2="290" stroke="#fb7185" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="480" y1="265" x2="480" y2="290" stroke="#fb7185" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="610" y1="265" x2="610" y2="290" stroke="#fb7185" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="810" y1="190" x2="810" y2="215" stroke="#fb7185" stroke-width="1"/>
+
+        <!-- ==================== INTER-SERVICE COMMUNICATION ==================== -->
+        <text x="30" y="370" fill="#fb923c" font-size="11" font-weight="600">SERVICE COMMUNICATION</text>
+        
+        <!-- REST -->
+        <rect x="30" y="385" width="90" height="40" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+        <text x="75" y="402" fill="white" font-size="9" font-weight="600" text-anchor="middle">REST</text>
+        <text x="75" y="417" fill="#94a3b8" font-size="6" text-anchor="middle">Feign</text>
+        
+        <!-- gRPC -->
+        <rect x="130" y="385" width="90" height="40" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+        <text x="175" y="402" fill="white" font-size="9" font-weight="600" text-anchor="middle">gRPC</text>
+        <text x="175" y="417" fill="#94a3b8" font-size="6" text-anchor="middle">Protobuf</text>
+        
+        <!-- Dubbo -->
+        <rect x="230" y="385" width="90" height="40" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+        <text x="275" y="402" fill="white" font-size="9" font-weight="600" text-anchor="middle">Dubbo</text>
+        <text x="275" y="417" fill="#94a3b8" font-size="6" text-anchor="middle">RPC</text>
+        
+        <!-- OpenFeign -->
+        <rect x="330" y="385" width="90" height="40" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+        <text x="375" y="402" fill="white" font-size="9" font-weight="600" text-anchor="middle">OpenFeign</text>
+        <text x="375" y="417" fill="#94a3b8" font-size="6" text-anchor="middle">HTTP Client</text>
+        
+        <!-- WebClient -->
+        <rect x="430" y="385" width="90" height="40" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+        <text x="475" y="402" fill="white" font-size="9" font-weight="600" text-anchor="middle">WebClient</text>
+        <text x="475" y="417" fill="#94a3b8" font-size="6" text-anchor="middle">Reactive</text>
+
+        <!-- ==================== MESSAGE QUEUE ==================== -->
+        <text x="30" y="460" fill="#38bdf8" font-size="11" font-weight="600">MESSAGE QUEUE</text>
+        
+        <!-- Kafka -->
+        <rect x="30" y="475" width="100" height="50" rx="6" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="2"/>
+        <text x="80" y="498" fill="white" font-size="10" font-weight="600" text-anchor="middle">Apache Kafka</text>
+        <text x="80" y="515" fill="#94a3b8" font-size="7" text-anchor="middle">Event Streaming</text>
+        
+        <!-- RabbitMQ -->
+        <rect x="140" y="475" width="100" height="50" rx="6" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="2"/>
+        <text x="190" y="498" fill="white" font-size="10" font-weight="600" text-anchor="middle">RabbitMQ</text>
+        <text x="190" y="515" fill="#94a3b8" font-size="7" text-anchor="middle">AMQP</text>
+        
+        <!-- RocketMQ -->
+        <rect x="250" y="475" width="100" height="50" rx="6" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="2"/>
+        <text x="300" y="498" fill="white" font-size="10" font-weight="600" text-anchor="middle">RocketMQ</text>
+        <text x="300" y="515" fill="#94a3b8" font-size="7" text-anchor="middle">Alibaba</text>
+        
+        <!-- Pulsar -->
+        <rect x="360" y="475" width="100" height="50" rx="6" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="1"/>
+        <text x="410" y="498" fill="white" font-size="10" font-weight="600" text-anchor="middle">Pulsar</text>
+        <text x="410" y="515" fill="#94a3b8" font-size="7" text-anchor="middle">Multi-tenancy</text>
+
+        <!-- Service -> MQ arrows -->
+        <line x1="90" y1="307" x2="80" y2="473" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+        <line x1="350" y1="307" x2="190" y2="473" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+        <line x1="610" y1="307" x2="300" y2="473" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+
+        <!-- ==================== RESILIENCE ==================== -->
+        <text x="550" y="370" fill="#fb923c" font-size="11" font-weight="600">RESILIENCE & GOVERNANCE</text>
+        
+        <!-- Circuit Breaker -->
+        <rect x="550" y="385" width="100" height="45" rx="6" fill="rgba(251, 146, 60, 0.4)" stroke="#fb923c" stroke-width="2"/>
+        <text x="600" y="405" fill="white" font-size="9" font-weight="600" text-anchor="middle">Circuit</text>
+        <text x="600" y="420" fill="#94a3b8" font-size="7" text-anchor="middle">Breaker</text>
+        
+        <!-- Resilience4j -->
+        <rect x="660" y="385" width="80" height="45" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1"/>
+        <text x="700" y="402" fill="white" font-size="8" font-weight="600" text-anchor="middle">Resilience4j</text>
+        <text x="700" y="418" fill="#94a3b8" font-size="6" text-anchor="middle">RateLimit</text>
+        
+        <!-- Sentinel -->
+        <rect x="750" y="385" width="80" height="45" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1"/>
+        <text x="790" y="402" fill="white" font-size="8" font-weight="600" text-anchor="middle">Sentinel</text>
+        <text x="790" y="418" fill="#94a3b8" font-size="6" text-anchor="middle">Alibaba</text>
+        
+        <!-- Rate Limiter -->
+        <rect x="550" y="440" width="100" height="40" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1"/>
+        <text x="600" y="458" fill="white" font-size="8" font-weight="600" text-anchor="middle">Rate Limiter</text>
+        <text x="600" y="472" fill="#94a3b8" font-size="6" text-anchor="middle">Token Bucket</text>
+        
+        <!-- Bulkhead -->
+        <rect x="660" y="440" width="80" height="40" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1"/>
+        <text x="700" y="458" fill="white" font-size="8" font-weight="600" text-anchor="middle">Bulkhead</text>
+        <text x="700" y="472" fill="#94a3b8" font-size="6" text-anchor="middle">Isolation</text>
+        
+        <!-- Retry -->
+        <rect x="750" y="440" width="80" height="40" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1"/>
+        <text x="790" y="458" fill="white" font-size="8" font-weight="600" text-anchor="middle">Retry</text>
+        <text x="790" y="472" fill="#94a3b8" font-size="6" text-anchor="middle">Backoff</text>
+
+        <!-- ==================== DATABASE LAYER ==================== -->
+        <text x="30" y="560" fill="#a78bfa" font-size="11" font-weight="600">DATABASE LAYER</text>
+        
+        <!-- MySQL -->
+        <rect x="30" y="575" width="90" height="50" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="2"/>
+        <text x="75" y="598" fill="white" font-size="10" font-weight="600" text-anchor="middle">MySQL</text>
+        <text x="75" y="615" fill="#94a3b8" font-size="7" text-anchor="middle">Relational</text>
+        
+        <!-- PostgreSQL -->
+        <rect x="130" y="575" width="90" height="50" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="2"/>
+        <text x="175" y="598" fill="white" font-size="10" font-weight="600" text-anchor="middle">PostgreSQL</text>
+        <text x="175" y="615" fill="#94a3b8" font-size="7" text-anchor="middle">Advanced</text>
+        
+        <!-- MongoDB -->
+        <rect x="230" y="575" width="90" height="50" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="2"/>
+        <text x="275" y="598" fill="white" font-size="10" font-weight="600" text-anchor="middle">MongoDB</text>
+        <text x="275" y="615" fill="#94a3b8" font-size="7" text-anchor="middle">Document</text>
+        
+        <!-- Redis -->
+        <rect x="330" y="575" width="90" height="50" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="2"/>
+        <text x="375" y="598" fill="white" font-size="10" font-weight="600" text-anchor="middle">Redis</text>
+        <text x="375" y="615" fill="#94a3b8" font-size="7" text-anchor="middle">Cache/Session</text>
+        
+        <!-- Elasticsearch -->
+        <rect x="430" y="575" width="90" height="50" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="2"/>
+        <text x="475" y="598" fill="white" font-size="10" font-weight="600" text-anchor="middle">Elasticsearch</text>
+        <text x="475" y="615" fill="#94a3b8" font-size="7" text-anchor="middle">Search/Log</text>
+
+        <!-- Arrows: Services -> Databases -->
+        <line x1="90" y1="335" x2="75" y2="573" stroke="#a78bfa" stroke-width="1" marker-end="url(#arrow-purple)"/>
+        <line x1="220" y1="335" x2="175" y2="573" stroke="#a78bfa" stroke-width="1" marker-end="url(#arrow-purple)"/>
+        <line x1="350" y1="335" x2="275" y2="573" stroke="#a78bfa" stroke-width="1" marker-end="url(#arrow-purple)"/>
+        <line x1="480" y1="335" x2="375" y2="573" stroke="#a78bfa" stroke-width="1" marker-end="url(#arrow-purple)"/>
+
+        <!-- ==================== OBSERVABILITY ==================== -->
+        <text x="550" y="520" fill="#fbbf24" font-size="11" font-weight="600">OBSERVABILITY</text>
+        
+        <!-- Prometheus -->
+        <rect x="550" y="535" width="100" height="50" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="2"/>
+        <text x="600" y="558" fill="white" font-size="10" font-weight="600" text-anchor="middle">Prometheus</text>
+        <text x="600" y="575" fill="#94a3b8" font-size="7" text-anchor="middle">Metrics</text>
+        
+        <!-- Grafana -->
+        <rect x="660" y="535" width="90" height="50" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="705" y="558" fill="white" font-size="10" font-weight="600" text-anchor="middle">Grafana</text>
+        <text x="705" y="575" fill="#94a3b8" font-size="7" text-anchor="middle">Dashboard</text>
+        
+        <!-- Zipkin -->
+        <rect x="760" y="535" width="90" height="50" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="2"/>
+        <text x="805" y="558" fill="white" font-size="10" font-weight="600" text-anchor="middle">Zipkin</text>
+        <text x="805" y="575" fill="#94a3b8" font-size="7" text-anchor="middle">Tracing</text>
+        
+        <!-- Sleuth -->
+        <rect x="860" y="535" width="80" height="50" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="900" y="558" fill="white" font-size="9" font-weight="600" text-anchor="middle">Sleuth</text>
+        <text x="900" y="575" fill="#94a3b8" font-size="7" text-anchor="middle">Trace ID</text>
+        
+        <!-- ELK Stack -->
+        <rect x="550" y="595" width="120" height="45" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="2"/>
+        <text x="610" y="615" fill="white" font-size="9" font-weight="600" text-anchor="middle">ELK Stack</text>
+        <text x="610" y="630" fill="#94a3b8" font-size="6" text-anchor="middle">Elasticsearch+Logstash+Kibana</text>
+        
+        <!-- SkyWalking -->
+        <rect x="680" y="595" width="100" height="45" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="730" y="615" fill="white" font-size="9" font-weight="600" text-anchor="middle">SkyWalking</text>
+        <text x="730" y="630" fill="#94a3b8" font-size="6" text-anchor="middle">APM</text>
+        
+        <!-- AlertManager -->
+        <rect x="790" y="595" width="100" height="45" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="840" y="615" fill="white" font-size="9" font-weight="600" text-anchor="middle">AlertManager</text>
+        <text x="840" y="630" fill="#94a3b8" font-size="6" text-anchor="middle">Alerts</text>
+
+        <!-- ==================== CONTAINER & ORCHESTRATION ==================== -->
+        <text x="1000" y="40" fill="#22d3ee" font-size="11" font-weight="600">CONTAINER & ORCHESTRATION</text>
+        
+        <!-- Docker -->
+        <rect x="1000" y="55" width="80" height="45" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="2"/>
+        <text x="1040" y="75" fill="white" font-size="9" font-weight="600" text-anchor="middle">Docker</text>
+        <text x="1040" y="90" fill="#94a3b8" font-size="7" text-anchor="middle">Container</text>
+        
+        <!-- Kubernetes -->
+        <rect x="1090" y="55" width="90" height="45" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="2"/>
+        <text x="1135" y="75" fill="white" font-size="9" font-weight="600" text-anchor="middle">Kubernetes</text>
+        <text x="1135" y="90" fill="#94a3b8" font-size="7" text-anchor="middle">K8s</text>
+        
+        <!-- Helm -->
+        <rect x="1190" y="55" width="70" height="45" rx="6" fill="rgba(8, 51, 68, 0.3)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="1225" y="75" fill="white" font-size="9" font-weight="600" text-anchor="middle">Helm</text>
+        <text x="1225" y="90" fill="#94a3b8" font-size="7" text-anchor="middle">Charts</text>
+        
+        <!-- K8s Components -->
+        <rect x="1000" y="110" width="70" height="35" rx="4" fill="rgba(8, 51, 68, 0.3)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="1035" y="128" fill="#22d3ee" font-size="7" font-weight="600" text-anchor="middle">Kube-proxy</text>
+        
+        <rect x="1080" y="110" width="70" height="35" rx="4" fill="rgba(8, 51, 68, 0.3)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="1115" y="128" fill="#22d3ee" font-size="7" font-weight="600" text-anchor="middle">Ingress</text>
+        
+        <rect x="1160" y="110" width="70" height="35" rx="4" fill="rgba(8, 51, 68, 0.3)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="1195" y="128" fill="#22d3ee" font-size="7" font-weight="600" text-anchor="middle">Service</text>
+        
+        <rect x="1240" y="110" width="70" height="35" rx="4" fill="rgba(8, 51, 68, 0.3)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="1275" y="128" fill="#22d3ee" font-size="7" font-weight="600" text-anchor="middle">Deployment</text>
+
+        <!-- ==================== CI/CD ==================== -->
+        <text x="1000" y="180" fill="#34d399" font-size="11" font-weight="600">CI/CD PIPELINE</text>
+        
+        <!-- Git -->
+        <rect x="1000" y="195" width="80" height="40" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="2"/>
+        <text x="1040" y="213" fill="white" font-size="9" font-weight="600" text-anchor="middle">Git</text>
+        <text x="1040" y="227" fill="#94a3b8" font-size="6" text-anchor="middle">Repository</text>
+        
+        <!-- Jenkins/GitLab CI -->
+        <rect x="1090" y="195" width="100" height="40" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="2"/>
+        <text x="1140" y="213" fill="white" font-size="9" font-weight="600" text-anchor="middle">Jenkins</text>
+        <text x="1140" y="227" fill="#94a3b8" font-size="6" text-anchor="middle">CI/CD</text>
+        
+        <!-- Maven/Gradle -->
+        <rect x="1200" y="195" width="80" height="40" rx="6" fill="rgba(6, 78, 59, 0.3)" stroke="#34d399" stroke-width="1"/>
+        <text x="1240" y="213" fill="white" font-size="9" font-weight="600" text-anchor="middle">Maven</text>
+        <text x="1240" y="227" fill="#94a3b8" font-size="6" text-anchor="middle">Build Tool</text>
+        
+        <!-- Docker Registry -->
+        <rect x="1000" y="245" width="100" height="40" rx="6" fill="rgba(6, 78, 59, 0.3)" stroke="#34d399" stroke-width="1"/>
+        <text x="1050" y="263" fill="white" font-size="9" font-weight="600" text-anchor="middle">Docker</text>
+        <text x="1050" y="277" fill="#94a3b8" font-size="6" text-anchor="middle">Registry</text>
+        
+        <!-- ArgoCD/Flux -->
+        <rect x="1110" y="245" width="90" height="40" rx="6" fill="rgba(6, 78, 59, 0.3)" stroke="#34d399" stroke-width="1"/>
+        <text x="1155" y="263" fill="white" font-size="9" font-weight="600" text-anchor="middle">ArgoCD</text>
+        <text x="1155" y="277" fill="#94a3b8" font-size="6" text-anchor="middle">GitOps</text>
+
+        <!-- ==================== API DOCUMENTATION ==================== -->
+        <text x="1000" y="320" fill="#a78bfa" font-size="11" font-weight="600">API DOCUMENTATION</text>
+        
+        <!-- Swagger/OpenAPI -->
+        <rect x="1000" y="335" width="120" height="45" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="2"/>
+        <text x="1060" y="355" fill="white" font-size="9" font-weight="600" text-anchor="middle">Swagger</text>
+        <text x="1060" y="370" fill="#94a3b8" font-size="6" text-anchor="middle">OpenAPI 3.0</text>
+        
+        <!-- Postman -->
+        <rect x="1130" y="335" width="90" height="45" rx="6" fill="rgba(76, 29, 149, 0.3)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="1175" y="355" fill="white" font-size="9" font-weight="600" text-anchor="middle">Postman</text>
+        <text x="1175" y="370" fill="#94a3b8" font-size="6" text-anchor="middle">API Testing</text>
+
+        <!-- ==================== DISTRIBUTED TRANSACTION ==================== -->
+        <text x="1000" y="420" fill="#fb7185" font-size="11" font-weight="600">DISTRIBUTED TRANSACTION</text>
+        
+        <!-- Seata -->
+        <rect x="1000" y="435" width="90" height="45" rx="6" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="2"/>
+        <text x="1045" y="455" fill="white" font-size="9" font-weight="600" text-anchor="middle">Seata</text>
+        <text x="1045" y="470" fill="#94a3b8" font-size="6" text-anchor="middle">AT Mode</text>
+        
+        <!-- LCN -->
+        <rect x="1100" y="435" width="80" height="45" rx="6" fill="rgba(136, 19, 55, 0.3)" stroke="#fb7185" stroke-width="1"/>
+        <text x="1140" y="455" fill="white" font-size="9" font-weight="600" text-anchor="middle">LCN</text>
+        <text x="1140" y="470" fill="#94a3b8" font-size="6" text-anchor="middle">TxManager</text>
+        
+        <!-- TCC -->
+        <rect x="1190" y="435" width="80" height="45" rx="6" fill="rgba(136, 19, 55, 0.3)" stroke="#fb7185" stroke-width="1"/>
+        <text x="1230" y="455" fill="white" font-size="9" font-weight="600" text-anchor="middle">TCC</text>
+        <text x="1230" y="470" fill="#94a3b8" font-size="6" text-anchor="middle">Try-Confirm</text>
+
+        <!-- ==================== SECURITY ==================== -->
+        <text x="1000" y="520" fill="#fbbf24" font-size="11" font-weight="600">SECURITY</text>
+        
+        <!-- Spring Security -->
+        <rect x="1000" y="535" width="110" height="45" rx="6" fill="rgba(251, 191, 36, 0.4)" stroke="#fbbf24" stroke-width="2"/>
+        <text x="1055" y="555" fill="white" font-size="9" font-weight="600" text-anchor="middle">Spring Security</text>
+        <text x="1055" y="570" fill="#94a3b8" font-size="6" text-anchor="middle">Authentication</text>
+        
+        <!-- OAuth2 -->
+        <rect x="1120" y="535" width="80" height="45" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="1160" y="555" fill="white" font-size="9" font-weight="600" text-anchor="middle">OAuth2</text>
+        <text x="1160" y="570" fill="#94a3b8" font-size="6" text-anchor="middle">Authorization</text>
+        
+        <!-- Sentinel -->
+        <rect x="1210" y="535" width="80" height="45" rx="6" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="1250" y="555" fill="white" font-size="9" font-weight="600" text-anchor="middle">Sentinel</text>
+        <text x="1250" y="570" fill="#94a3b8" font-size="6" text-anchor="middle">Flow Control</text>
+
+        <!-- ==================== SERVICE MESH ==================== -->
+        <text x="1000" y="610" fill="#38bdf8" font-size="11" font-weight="600">SERVICE MESH (OPTIONAL)</text>
+        
+        <!-- Istio -->
+        <rect x="1000" y="625" width="80" height="45" rx="6" fill="rgba(56, 189, 248, 0.3)" stroke="#38bdf8" stroke-width="2"/>
+        <text x="1040" y="645" fill="white" font-size="9" font-weight="600" text-anchor="middle">Istio</text>
+        <text x="1040" y="660" fill="#94a3b8" font-size="6" text-anchor="middle">Control Plane</text>
+        
+        <!-- Envoy -->
+        <rect x="1090" y="625" width="80" height="45" rx="6" fill="rgba(56, 189, 248, 0.3)" stroke="#38bdf8" stroke-width="2"/>
+        <text x="1130" y="645" fill="white" font-size="9" font-weight="600" text-anchor="middle">Envoy</text>
+        <text x="1130" y="660" fill="#94a3b8" font-size="6" text-anchor="middle">Data Plane</text>
+        
+        <!-- Linkerd -->
+        <rect x="1180" y="625" width="80" height="45" rx="6" fill="rgba(56, 189, 248, 0.3)" stroke="#38bdf8" stroke-width="1"/>
+        <text x="1220" y="645" fill="white" font-size="9" font-weight="600" text-anchor="middle">Linkerd</text>
+        <text x="1220" y="660" fill="#94a3b8" font-size="6" text-anchor="middle">Lightweight</text>
+
+        <!-- ==================== LEGEND ==================== -->
+        <text x="1350" y="40" fill="white" font-size="10" font-weight="600">Legend</text>
+        
+        <rect x="1350" y="55" width="16" height="10" rx="2" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="1372" y="63" fill="#94a3b8" font-size="7">Gateway</text>
+        
+        <rect x="1350" y="70" width="16" height="10" rx="2" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="1372" y="78" fill="#94a3b8" font-size="7">Microservice</text>
+        
+        <rect x="1350" y="85" width="16" height="10" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="1372" y="93" fill="#94a3b8" font-size="7">Database</text>
+        
+        <rect x="1350" y="100" width="16" height="10" rx="2" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1"/>
+        <text x="1372" y="108" fill="#94a3b8" font-size="7">Infrastructure</text>
+        
+        <rect x="1350" y="115" width="16" height="10" rx="2" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1"/>
+        <text x="1372" y="123" fill="#94a3b8" font-size="7">Resilience</text>
+        
+        <rect x="1350" y="130" width="16" height="10" rx="2" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="1372" y="138" fill="#94a3b8" font-size="7">Observability</text>
+        
+        <rect x="1350" y="145" width="16" height="10" rx="2" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="1"/>
+        <text x="1372" y="153" fill="#94a3b8" font-size="7">Message Queue</text>
+      </svg>
+    </div>
+    
+    <!-- Detailed Component Cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-header"><div class="card-dot cyan"></div><h3>Gateway 层组件</h3></div>
+        <ul>
+          <li>• Spring Cloud Gateway: 路由、过滤、限流</li>
+          <li>• Nginx: 负载均衡、反向代理</li>
+          <li>• Spring Cloud CircuitBreaker: 熔断降级</li>
+          <li>• Spring Security OAuth2: 认证授权</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <div class="card-header"><div class="card-dot emerald"></div><h3>核心微服务（示例）</h3></div>
+        <ul>
+          <li>• Order Service: 订单处理 :8081</li>
+          <li>• User Service: 用户管理 :8082</li>
+          <li>• Product Service: 商品管理 :8083</li>
+          <li>• Payment Service: 支付网关 :8084</li>
+          <li>• Notification Service: 消息推送 :8085</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <div class="card-header"><div class="card-dot violet"></div><h3>数据库层</h3></div>
+        <ul>
+          <li>• MySQL/PostgreSQL: 业务主数据库</li>
+          <li>• MongoDB: 文档型数据存储</li>
+          <li>• Redis: 缓存、Session、分布式锁</li>
+          <li>• Elasticsearch: 全文搜索、日志分析</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <div class="card-header"><div class="card-dot rose"></div><h3>服务治理</h3></div>
+        <ul>
+          <li>• Eureka/Nacos: 服务注册与发现</li>
+          <li>• Spring Cloud Config: 集中配置管理</li>
+          <li>• Resilience4j: 熔断、限流、隔离</li>
+          <li>• Sentinel: 流量控制、降级</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <div class="card-header"><div class="card-dot amber"></div><h3>可观测性</h3></div>
+        <ul>
+          <li>• Prometheus + Grafana: 指标监控</li>
+          <li>• Sleuth + Zipkin: 链路追踪</li>
+          <li>• ELK Stack: 日志收集分析</li>
+          <li>• SkyWalking: APM 应用性能监控</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <div class="card-header"><div class="card-dot sky"></div><h3>消息队列</h3></div>
+        <ul>
+          <li>• Kafka: 高吞吐事件流处理</li>
+          <li>• RabbitMQ: 企业级消息队列</li>
+          <li>• RocketMQ: 阿里分布式消息中间件</li>
+          <li>• Pulsar: 多租户消息系统</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <div class="card-header"><div class="card-dot orange"></div><h3>通信协议</h3></div>
+        <ul>
+          <li>• REST: HTTP/JSON 标准接口</li>
+          <li>• gRPC: 高性能 RPC 调用</li>
+          <li>• Dubbo: 阿里 RPC 框架</li>
+          <li>• OpenFeign: 声明式 HTTP 客户端</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <div class="card-header"><div class="card-dot rose"></div><h3>分布式事务</h3></div>
+        <ul>
+          <li>• Seata: 阿里分布式事务解决方案</li>
+          <li>• AT 模式: 自动补偿</li>
+          <li>• TCC 模式: Try-Confirm-Cancel</li>
+          <li>• SAGA 模式: 长事务编排</li>
+        </ul>
+      </div>
+    </div>
+    
+    <p class="footer">Spring Cloud Microservices Architecture • Generated with Hermes Agent</p>
+  </div>
+</body>
+</html>
