@@ -1,12 +1,38 @@
 # 认知科学
 
-跨学科认知研究笔记，涵盖复利原理、控制论、压力管理、完美主义分析。
+本目录收录跨学科认知研究笔记，重点关注复利原理、知识网络、信息生态、认知负荷、元认知、决策质量、问题选择、控制论、压力管理、完美主义与责任心等主题。
+
+这些文章的共同目标是把抽象模型拆成可理解、可复用、可迁移的分析框架：从数学、心理、复杂系统到个人学习、职场协作、长期决策和人生策略。
 
 ## 文件列表
 
-| 文件 | 说明 | 字数 |
-|------|------|------|
-| [compound-interest-deep-analysis.md](./compound-interest-deep-analysis.md) | 复利原理的跨学科深度分析 — 数学本质、72法则、物理世界实例（核裂变、晶体生长、人口增长）、控制论/正反馈/自催化、复杂网络/优先连接/幂律分布、知识复利、AI系统中的数据飞轮与Scaling Law、复利边界与陷阱 | ~11,500字 |
-| [knowledge-compound-interest.md](./knowledge-compound-interest.md) | 知识复利的底层机制 — 异质连接与网络拓扑、工作记忆瓶颈与组块化、三条自催化回路（阐释/交叉验证/教学）、间隔重复对抗遗忘、路径依赖与领域锁定、虚假平台期、知识账户操作框架、AI时代的影响 | ~11,000字 |
-| [stress-resources-demands.md](./stress-resources-demands.md) | 压力、需求与资源 — 控制论视角（Lazarus认知评估、Karasek Demand-Control、Hobfoll COR、McEwen非稳态负荷）、实操框架（SLO、容量规划、告警阈值、降级策略、需求管理、恢复策略）、职场处境分析、串联阅读（笛卡尔的错误/思考快与慢/为什么）、完美主义的数学依据与控制论证明 | ~14,500字 |
-| [perfectionism-vs-responsibility.md](./perfectionism-vs-responsibility.md) | 完美主义 vs 责任心：控制理论证明（英文版）— PID控制器类比、锚定效应、SRE工程证据（熔断器/重试/错误预算） | ~3,600字 |
+| 文件 | 主题 | 说明 |
+| --- | --- | --- |
+| [compound-interest-deep-analysis.md](./compound-interest-deep-analysis.md) | 复利原理 | 从数学本质、72 法则、物理世界实例、控制论、复杂网络和 AI Scaling Law 理解复利。 |
+| [knowledge-compound-interest.md](./knowledge-compound-interest.md) | 知识复利 | 分析异质连接、网络拓扑、工作记忆瓶颈、组块化、间隔重复与知识账户。 |
+| [twenty-cognitive-levers.md](./twenty-cognitive-levers.md) | 20 个认知点 | 从问题表征、基准率、注意力预算、身份叙事到生命资源，整理可迁移的认知杠杆。 |
+| [information-ecology-and-attention.md](./information-ecology-and-attention.md) | 信息生态与注意力 | 从信息论、注意力过滤器和互联网噪声结构理解信息过载。 |
+| [cognitive-load-and-context-switching.md](./cognitive-load-and-context-switching.md) | 认知负荷与上下文切换 | 解释为什么频繁切换会吞掉深度产出，并给出任务调度、checkpoint 和注意力防抖框架。 |
+| [metacognition-and-feedback-loops.md](./metacognition-and-feedback-loops.md) | 元认知与反馈回路 | 把自己当成可调试系统，训练观察、评估和校准自身思考过程的能力。 |
+| [decision-quality-and-second-order-thinking.md](./decision-quality-and-second-order-thinking.md) | 决策质量与二阶思维 | 用概率思维、二阶后果、反事实复盘和决策日志提高判断质量。 |
+| [what-problems-should-we-solve.md](./what-problems-should-we-solve.md) | 人应该做什么样的事 | 从真实问题、复利问题、责任半径和结构改善四个坐标，判断什么问题值得投入生命资源。 |
+| [stress-resources-demands.md](./stress-resources-demands.md) | 压力与资源 | 用控制论、需求-控制模型和资源保存理论理解压力管理。 |
+| [perfectionism-vs-responsibility.md](./perfectionism-vs-responsibility.md) | 完美主义与责任心 | 区分健康责任心与失控完美主义，建立可持续的高标准。 |
+
+## 阅读路径
+
+1. **认知地图**：先读 20 个认知点，建立一组可迁移的观察工具。
+2. **增长模型**：再读复利原理和知识复利，建立“增长不是线性累加”的基本模型。
+3. **注意力基础设施**：读信息生态与认知负荷，理解注意力为什么会被外部环境切碎。
+4. **自我调试系统**：读元认知与反馈回路，建立观察、复盘、调参的自我校准机制。
+5. **外部判断系统**：读决策质量与二阶思维，把经验转化为可校准的判断模型。
+6. **问题选择系统**：读“人应该做什么样的事”，把能力、判断和注意力放到更值得解决的问题上。
+7. **压力与行动校准**：最后读压力与资源、完美主义与责任心，用控制论视角管理负载和行动标准。
+
+## 持续扩展方向
+
+- 学习系统：检索练习、间隔重复、知识图谱和输出驱动学习。
+- 情绪调节：威胁评估、恢复策略、心理安全和自我效能感。
+- AI 时代认知：人机分工、外部记忆和判断力保持。
+- 创造力系统：远距联想、问题重构、审美判断和探索/利用平衡。
+- 社会认知：信任、协作、激励、声誉和群体决策偏差。

@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# cogniX Web
 
-## Getting Started
+这是 cogniX 认知科学知识库的 Next.js 展示站点。它从仓库上级目录读取 Markdown 内容，并生成首页、分类页和文章页。
 
-First, run the development server:
+## 本地开发
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+默认访问地址：
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 内容来源
 
-## Learn More
+站点通过 [lib/content.ts](./lib/content.ts) 扫描以下目录：
 
-To learn more about Next.js, take a look at the following resources:
+- `../cognitive-science`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+每个 Markdown 文件的一级标题会作为文章标题；文件路径会转换为文章 slug。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 常用命令
 
-## Deploy on Vercel
+```bash
+npm run build
+npm run lint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 说明
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+这个目录只负责展示认知科学内容，不再承载英语学习或技术主题内容。

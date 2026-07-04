@@ -16,7 +16,7 @@ export async function generateMetadata({
   const { category, slug } = await params;
   const article = await getArticle(category, slug);
   return {
-    title: article ? `${article.title} — cogniX` : "cogniX",
+    title: article ? `${article.title} - cogniX` : "cogniX",
   };
 }
 
@@ -30,37 +30,45 @@ export default async function ArticlePage({
 
   if (!article) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold">文章未找到</h1>
-        <Link href="/" className="mt-4 inline-block text-accent hover:underline">
-          返回首页
+      <div className="mx-auto max-w-4xl px-5 pb-20 pt-32 text-center">
+        <h1 className="text-2xl font-bold">
+          <span className="lang-zh">文章未找到</span>
+          <span className="lang-en">Article not found</span>
+        </h1>
+        <Link href="/" className="mt-4 inline-block text-[var(--accent)] hover:underline">
+          <span className="lang-zh">返回首页</span>
+          <span className="lang-en">Back home</span>
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex items-center gap-2 text-sm text-muted mb-6">
-        <Link href="/" className="hover:text-accent transition-colors">
-          首页
+    <div className="mx-auto max-w-4xl px-5 pb-20 pt-32 sm:px-8">
+      <div className="mb-8 flex flex-wrap items-center gap-2 text-sm text-[var(--muted)]">
+        <Link href="/" className="transition hover:text-[var(--accent)]">
+          <span className="lang-zh">首页</span>
+          <span className="lang-en">Home</span>
         </Link>
         <span>/</span>
         <Link
           href={`/category/${article.categorySlug}/`}
-          className="hover:text-accent transition-colors"
+          className="transition hover:text-[var(--accent)]"
         >
           {article.category}
         </Link>
         <span>/</span>
-        <span className="text-foreground">{article.title}</span>
+        <span className="text-[var(--foreground)]">{article.title}</span>
       </div>
 
       <article>
-        <header className="mb-8 pb-6 border-b border-card-border">
-          <h1 className="text-3xl font-bold">{article.title}</h1>
-          <div className="mt-3 flex items-center gap-4 text-sm text-muted">
-            <span>约 {Math.round(article.wordCount / 1000)}k 字</span>
+        <header className="mb-8 border-b border-[var(--line)] pb-6">
+          <h1 className="text-3xl font-semibold leading-tight sm:text-4xl">{article.title}</h1>
+          <div className="mt-4 flex items-center gap-4 text-sm text-[var(--muted)]">
+            <span>
+              <span className="lang-zh">约 {Math.max(1, Math.round(article.wordCount / 1000))}k 字</span>
+              <span className="lang-en">~{Math.max(1, Math.round(article.wordCount / 1000))}k chars</span>
+            </span>
             <span>{article.category}</span>
           </div>
         </header>
@@ -71,12 +79,14 @@ export default async function ArticlePage({
         />
       </article>
 
-      <div className="mt-12 pt-6 border-t border-card-border">
+      <div className="mt-12 border-t border-[var(--line)] pt-6">
         <Link
           href={`/category/${article.categorySlug}/`}
-          className="text-accent hover:underline text-sm"
+          className="text-sm text-[var(--accent)] hover:underline"
         >
-          &larr; 返回 {article.category}
+          &larr;{" "}
+          <span className="lang-zh">返回 {article.category}</span>
+          <span className="lang-en">Back to {article.category}</span>
         </Link>
       </div>
     </div>

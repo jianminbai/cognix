@@ -26,28 +26,8 @@ export interface Category {
 const CATEGORIES: Record<string, { name: string; description: string; icon: string }> = {
   "cognitive-science": {
     name: "认知科学",
-    description: "跨学科深度分析 — 复利原理、控制论、压力管理、完美主义",
-    icon: "🧠",
-  },
-  english: {
-    name: "英语晨读",
-    description: "每日晨读推送 — 单词、金句、语法小贴士",
-    icon: "📖",
-  },
-  "spring-cloud": {
-    name: "Spring Cloud",
-    description: "30课系统学习微服务架构 — Nacos、Sentinel、Gateway",
-    icon: "☁️",
-  },
-  "book-sourcing": {
-    name: "技术书籍",
-    description: "技术书籍找书方法论与参考资料",
-    icon: "📚",
-  },
-  ops: {
-    name: "AI Ops",
-    description: "AI 运维 Prompt 模板与排障指南",
-    icon: "🔧",
+    description: "注意力、元认知、决策质量、问题选择与长期成长",
+    icon: "◈",
   },
 };
 
@@ -78,16 +58,22 @@ function getMarkdownFiles(dir: string): string[] {
   return files;
 }
 
+function toArticleSlug(dir: string, filePath: string): string {
+  return path
+    .relative(dir, filePath)
+    .replace(/\.md$/, "")
+    .split(path.sep)
+    .join("-");
+}
+
 export function getCategories(): Category[] {
   return Object.entries(CATEGORIES).map(([slug, meta]) => {
     const dir = path.join(contentRoot, slug);
     const files = getMarkdownFiles(dir);
     const articles = files.map((filePath) => {
       const content = fs.readFileSync(filePath, "utf-8");
-      const relativePath = path.relative(dir, filePath);
-      const articleSlug = relativePath.replace(/\.md$/, "").replace(/\//g, "-");
       return {
-        slug: articleSlug,
+        slug: toArticleSlug(dir, filePath),
         title: extractTitle(content, path.basename(filePath)),
         wordCount: content.length,
       };
@@ -107,8 +93,7 @@ export async function getArticle(
   const files = getMarkdownFiles(dir);
 
   for (const filePath of files) {
-    const relativePath = path.relative(dir, filePath);
-    const slug = relativePath.replace(/\.md$/, "").replace(/\//g, "-");
+    const slug = toArticleSlug(dir, filePath);
     if (slug === articleSlug) {
       const raw = fs.readFileSync(filePath, "utf-8");
       const result = await remark().use(remarkGfm).use(html).process(raw);
@@ -131,9 +116,7 @@ export function getAllArticlePaths(): { categorySlug: string; articleSlug: strin
     const dir = path.join(contentRoot, categorySlug);
     const files = getMarkdownFiles(dir);
     for (const filePath of files) {
-      const relativePath = path.relative(dir, filePath);
-      const articleSlug = relativePath.replace(/\.md$/, "").replace(/\//g, "-");
-      paths.push({ categorySlug, articleSlug });
+      paths.push({ categorySlug, articleSlug: toArticleSlug(dir, filePath) });
     }
   }
   return paths;
