@@ -59,7 +59,7 @@ const topics = [
 
 function article([slug, title, thesis, change, explains], index) {
   const number = String(index + 1).padStart(2, "0");
-  return `# ${title}：拓展认知边界的第 ${number} 个方向
+  return `# 拓展认知边界的第 ${number} 个方向：${title}
 
 ${thesis}
 
