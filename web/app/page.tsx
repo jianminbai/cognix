@@ -114,7 +114,7 @@ export default function Home() {
             </div>
             <p className="section-copy max-w-xl text-base leading-7">
               <span className="lang-zh">
-                首页只保留一条主线：从观察问题，到校准判断，再到形成长期复利。
+                从观察问题，到校准判断，再到形成长期复利。
               </span>
               <span className="lang-en">
                 One clear path: observe problems, calibrate judgment, and compound insight.
