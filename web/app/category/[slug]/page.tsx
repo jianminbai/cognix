@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArticleBrowser } from "@/components/article-browser";
 import { getCategories } from "@/lib/content";
 
 export function generateStaticParams() {
@@ -44,7 +45,7 @@ export default async function CategoryPage({
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-5 pb-20 pt-32 sm:px-8">
+    <div className="mx-auto max-w-6xl px-5 pb-20 pt-32 sm:px-8">
       <Link href="/" className="text-sm text-[var(--muted)] transition hover:text-[var(--accent)]">
         &larr;{" "}
         <span className="lang-zh">返回首页</span>
@@ -61,27 +62,7 @@ export default async function CategoryPage({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3">
-        {category.articles.map((article) => (
-          <Link
-            key={article.slug}
-            href={`/article/${category.slug}/${article.slug}/`}
-            className="node-link"
-          >
-            <span className="text-base font-medium">{article.title}</span>
-            <span className="flex shrink-0 items-center gap-4 text-sm text-[var(--muted)]">
-              <span>
-                <span className="lang-zh">约 {Math.max(1, Math.round(article.wordCount / 1000))}k 字</span>
-                <span className="lang-en">~{Math.max(1, Math.round(article.wordCount / 1000))}k chars</span>
-              </span>
-              <span className="text-[var(--accent)]">
-                <span className="lang-zh">阅读</span>
-                <span className="lang-en">Read</span>
-              </span>
-            </span>
-          </Link>
-        ))}
-      </div>
+      <ArticleBrowser categorySlug={category.slug} articles={category.articles} />
 
       {category.articles.length === 0 && (
         <div className="py-12 text-center text-[var(--muted)]">

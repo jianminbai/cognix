@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArticleIllustration } from "@/components/article-illustration";
 import { getArticle, getAllArticlePaths } from "@/lib/content";
 
 export function generateStaticParams() {
@@ -44,7 +45,7 @@ export default async function ArticlePage({
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-5 pb-20 pt-32 sm:px-8">
+    <div className="mx-auto max-w-5xl px-5 pb-20 pt-32 sm:px-8">
       <div className="mb-8 flex flex-wrap items-center gap-2 text-sm text-[var(--muted)]">
         <Link href="/" className="transition hover:text-[var(--accent)]">
           <span className="lang-zh">首页</span>
@@ -62,15 +63,33 @@ export default async function ArticlePage({
       </div>
 
       <article>
-        <header className="mb-8 border-b border-[var(--line)] pb-6">
-          <h1 className="text-3xl font-semibold leading-tight sm:text-4xl">{article.title}</h1>
-          <div className="mt-4 flex items-center gap-4 text-sm text-[var(--muted)]">
-            <span>
-              <span className="lang-zh">约 {Math.max(1, Math.round(article.wordCount / 1000))}k 字</span>
-              <span className="lang-en">~{Math.max(1, Math.round(article.wordCount / 1000))}k chars</span>
-            </span>
-            <span>{article.category}</span>
+        <header className="mb-10 grid gap-8 border-b border-[var(--line)] pb-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <div className="mb-4 flex flex-wrap gap-2">
+              {article.tags.map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/category/${article.categorySlug}/#tag=${encodeURIComponent(tag)}`}
+                  className="tag-chip tag-chip-link"
+                >
+                  {tag}
+                </Link>
+              ))}
+            </div>
+            <h1 className="text-3xl font-semibold leading-tight sm:text-5xl">{article.title}</h1>
+            <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-[var(--muted)]">
+              <span>
+                <span className="lang-zh">约 {Math.max(1, Math.round(article.wordCount / 1000))}k 字</span>
+                <span className="lang-en">~{Math.max(1, Math.round(article.wordCount / 1000))}k chars</span>
+              </span>
+              <span>{article.category}</span>
+            </div>
           </div>
+          <ArticleIllustration
+            title={article.title}
+            tags={article.tags}
+            seed={article.visualSeed}
+          />
         </header>
 
         <div
