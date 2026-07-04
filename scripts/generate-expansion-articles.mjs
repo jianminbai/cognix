@@ -57,9 +57,8 @@ const topics = [
   ["50-longtermism", "长期主义未来观", "长期主义未来观要求我们把气候、AI、人口、能源、战争和太空探索放到几十年甚至更长尺度中思考。", "它改变的是责任观：重要问题不一定立刻吵闹，沉默的长期变量可能决定文明方向。", "它能解释气候政策、AI 安全、人口老龄化、能源转型、核风险和人类扩展到太空的想象。"],
 ];
 
-function article([slug, title, thesis, change, explains], index) {
-  const number = String(index + 1).padStart(2, "0");
-  return `# 拓展认知边界的第 ${number} 个方向：${title}
+function article([slug, title, thesis, change, explains]) {
+  return `# ${title}
 
 ${thesis}
 
@@ -144,7 +143,7 @@ fs.writeFileSync(path.join(outDir, "README.md"), readme, "utf8");
 
 for (let i = 0; i < topics.length; i += 1) {
   const [slug] = topics[i];
-  fs.writeFileSync(path.join(outDir, `${slug}.md`), article(topics[i], i), "utf8");
+  fs.writeFileSync(path.join(outDir, `${slug}.md`), article(topics[i]), "utf8");
 }
 
 console.log(`Generated ${topics.length} expansion articles in ${path.relative(root, outDir)}`);
