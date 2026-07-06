@@ -86,7 +86,6 @@ function deriveTags(title: string, relativeSlug: string, frontmatterTags: unknow
   }
 
   if (relativeSlug.startsWith("levers-")) tags.add("认知杠杆");
-  if (relativeSlug.startsWith("expansion-")) tags.add("认知拓展");
   if (tags.size === 0) tags.add("认知科学");
 
   return Array.from(tags).slice(0, 4);
