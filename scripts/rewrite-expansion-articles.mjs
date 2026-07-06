@@ -96,6 +96,8 @@ function article([slug, title, group, thesis, change, explains], index) {
   const serial = String(index + 1).padStart(2, "0");
   return `# ${title}
 
+> 作者：JmBai · 发布时间：2026-07-04
+
 ${thesis}
 
 讨论“${title}”，不能只停在概念介绍。一个概念真正有价值，是因为它能改变人看问题的入口：原来只看表面结果，现在开始看生成条件；原来只问谁对谁错，现在开始问哪些变量在共同起作用；原来只寻找立即答案，现在愿意把问题放回更长的时间和更大的结构中。
