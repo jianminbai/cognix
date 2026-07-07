@@ -19,6 +19,7 @@
 | [stress-resources-demands.md](./stress-resources-demands.md) | 压力与资源 | 用控制论、需求-控制模型和资源保存理论理解压力管理。 |
 | [perfectionism-vs-responsibility.md](./perfectionism-vs-responsibility.md) | 完美主义与责任心 | 区分健康责任心与失控完美主义，建立可持续的高标准。 |
 | [dao-de-jing-cognitive-operating-system.md](./dao-de-jing-cognitive-operating-system.md) | 道德经的认知操作系统 | 用控制论、复杂系统与元认知，重读《道德经》的无为、反者道之动、柔弱胜刚强等核心命题。 |
+| [overcontrol-paradox.md](./overcontrol-paradox.md) | 管的越多，错的越多 | 从控制幻觉、二阶后果、自组织与反脆弱，拆解过度干预的隐性代价与"少管多对"的工程基础。 |
 
 ## 阅读路径
 
@@ -30,6 +31,7 @@
 6. **问题选择系统**：读“人应该做什么样的事”，把能力、判断和注意力放到更值得解决的问题上。
 7. **压力与行动校准**：读压力与资源、完美主义与责任心，用控制论视角管理负载和行动标准。
 8. **经典哲学的现代改写**：最后读道德经的认知操作系统，把无为、反者道之动、柔弱胜刚强等古典命题翻译为今天的认知杠杆。
+9. **系统与反控制**：读"管的越多，错的越多"，把无为原则翻译成现代管理学和复杂系统语言——少管多对、用减法做管理。
 
 ## 持续扩展方向
 
