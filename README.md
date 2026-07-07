@@ -31,6 +31,7 @@ cognix/
 - [压力、需求与资源](./cognitive-science/stress-resources-demands.md)：把控制论和资源保存理论迁移到个人精力管理。
 - [道德经的认知操作系统](./cognitive-science/dao-de-jing-cognitive-operating-system.md)：用控制论、复杂系统与元认知，重读《道德经》的无为、反者道之动、柔弱胜刚强等核心命题，把它改写成可执行的认知杠杆。
 - [管的越多，错的越多](./cognitive-science/overcontrol-paradox.md)：从控制幻觉、二阶后果、自组织与反脆弱，拆解过度干预的隐性代价，给出"用减法做管理"的可执行清单。
+- [为什么大多数人股票投资跑不过指数](./cognitive-science/why-most-investors-underperform-index.md)：从行为偏差、信息过载、频繁交易与指数的反脆弱结构，拆解普通投资者的结构性亏损来源，并把股市作为认知的镜子反观自身。
 
 ## 知识复利原则
 
