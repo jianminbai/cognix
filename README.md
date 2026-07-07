@@ -33,6 +33,7 @@ cognix/
 - [管的越多，错的越多](./cognitive-science/overcontrol-paradox.md)：从控制幻觉、二阶后果、自组织与反脆弱，拆解过度干预的隐性代价，给出"用减法做管理"的可执行清单。
 - [为什么大多数人股票投资跑不过指数](./cognitive-science/why-most-investors-underperform-index.md)：从行为偏差、信息过载、频繁交易与指数的反脆弱结构，拆解普通投资者的结构性亏损来源，并把股市作为认知的镜子反观自身。
 - [与不同认知纬度的人打交道](./cognitive-science/cross-dimensional-communication.md)：抽象↔具体、快↔慢、整体↔局部、情感↔逻辑四个核心纬度，及"观察/翻译/等待"三个核心动作，让差异变成连接的来源。
+- [论止损的必要性](./cognitive-science/stop-loss-as-cognitive-discipline.md)：从损失厌恶、沉没成本、锚定与处置效应拆解不愿止损的认知枷锁，提出止损的反向复利，并把止损上升到人生维度的认知勇气。
 
 ## 知识复利原则
 
