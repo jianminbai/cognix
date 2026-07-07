@@ -29,6 +29,7 @@ cognix/
 - [认知负荷与上下文切换](./cognitive-science/cognitive-load-and-context-switching.md)：解释为什么频繁切换会吞掉深度产出，并给出任务调度、checkpoint 和注意力防抖框架。
 - [信息生态与注意力管理](./cognitive-science/information-ecology-and-attention.md)：分析信息噪声如何攻击前注意过滤器，以及如何建立分层过滤策略。
 - [压力、需求与资源](./cognitive-science/stress-resources-demands.md)：把控制论和资源保存理论迁移到个人精力管理。
+- [道德经的认知操作系统](./cognitive-science/dao-de-jing-cognitive-operating-system.md)：用控制论、复杂系统与元认知，重读《道德经》的无为、反者道之动、柔弱胜刚强等核心命题，把它改写成可执行的认知杠杆。
 
 ## 知识复利原则
 
