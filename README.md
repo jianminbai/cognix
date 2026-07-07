@@ -29,6 +29,7 @@ cognix/
 - [认知负荷与上下文切换](./cognitive-science/cognitive-load-and-context-switching.md)：解释为什么频繁切换会吞掉深度产出，并给出任务调度、checkpoint 和注意力防抖框架。
 - [信息生态与注意力管理](./cognitive-science/information-ecology-and-attention.md)：分析信息噪声如何攻击前注意过滤器，以及如何建立分层过滤策略。
 - [压力、需求与资源](./cognitive-science/stress-resources-demands.md)：把控制论和资源保存理论迁移到个人精力管理。
+- [复利的元理论](./cognitive-science/the-compounding-manifesto.md)：把分散在金融、知识、关系、决策中的复利现象归并到同一底层框架——复利不关心方向，只放大系统中会重复、积累、再投入的东西。
 - [道德经的认知操作系统](./cognitive-science/dao-de-jing-cognitive-operating-system.md)：用控制论、复杂系统与元认知，重读《道德经》的无为、反者道之动、柔弱胜刚强等核心命题，把它改写成可执行的认知杠杆。
 - [管的越多，错的越多](./cognitive-science/overcontrol-paradox.md)：从控制幻觉、二阶后果、自组织与反脆弱，拆解过度干预的隐性代价，给出"用减法做管理"的可执行清单。
 - [为什么大多数人股票投资跑不过指数](./cognitive-science/why-most-investors-underperform-index.md)：从行为偏差、信息过载、频繁交易与指数的反脆弱结构，拆解普通投资者的结构性亏损来源，并把股市作为认知的镜子反观自身。

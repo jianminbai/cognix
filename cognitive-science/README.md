@@ -8,8 +8,7 @@
 
 | 文件 | 主题 | 说明 |
 | --- | --- | --- |
-| [compound-interest-deep-analysis.md](./compound-interest-deep-analysis.md) | 复利原理 | 从数学本质、72 法则、物理世界实例、控制论、复杂网络和 AI Scaling Law 理解复利。 |
-| [knowledge-compound-interest.md](./knowledge-compound-interest.md) | 知识复利 | 分析异质连接、网络拓扑、工作记忆瓶颈、组块化、间隔重复与知识账户。 |
+| [the-compounding-manifesto.md](./the-compounding-manifesto.md) | 复利的元理论 | 把分散在金融、知识、关系、决策中的复利现象归并到同一底层框架——复利不关心方向，只放大系统。 |
 | [twenty-cognitive-levers.md](./twenty-cognitive-levers.md) | 20 个认知点 | 从问题表征、基准率、注意力预算、身份叙事到生命资源，整理可迁移的认知杠杆。 |
 | [information-ecology-and-attention.md](./information-ecology-and-attention.md) | 信息生态与注意力 | 从信息论、注意力过滤器和互联网噪声结构理解信息过载。 |
 | [cognitive-load-and-context-switching.md](./cognitive-load-and-context-switching.md) | 认知负荷与上下文切换 | 解释为什么频繁切换会吞掉深度产出，并给出任务调度、checkpoint 和注意力防抖框架。 |
@@ -27,7 +26,7 @@
 ## 阅读路径
 
 1. **认知地图**：先读 20 个认知点，建立一组可迁移的观察工具。
-2. **增长模型**：再读复利原理和知识复利，建立“增长不是线性累加”的基本模型。
+2. **增长模型**：先读《复利的元理论》，把金融、知识、关系、决策中的复利现象归并到同一框架——复利是中立放大器，增长率 r 才是关键。
 3. **注意力基础设施**：读信息生态与认知负荷，理解注意力为什么会被外部环境切碎。
 4. **自我调试系统**：读元认知与反馈回路，建立观察、复盘、调参的自我校准机制。
 5. **外部判断系统**：读决策质量与二阶思维，把经验转化为可校准的判断模型。
