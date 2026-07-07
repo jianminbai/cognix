@@ -32,6 +32,7 @@ cognix/
 - [道德经的认知操作系统](./cognitive-science/dao-de-jing-cognitive-operating-system.md)：用控制论、复杂系统与元认知，重读《道德经》的无为、反者道之动、柔弱胜刚强等核心命题，把它改写成可执行的认知杠杆。
 - [管的越多，错的越多](./cognitive-science/overcontrol-paradox.md)：从控制幻觉、二阶后果、自组织与反脆弱，拆解过度干预的隐性代价，给出"用减法做管理"的可执行清单。
 - [为什么大多数人股票投资跑不过指数](./cognitive-science/why-most-investors-underperform-index.md)：从行为偏差、信息过载、频繁交易与指数的反脆弱结构，拆解普通投资者的结构性亏损来源，并把股市作为认知的镜子反观自身。
+- [与不同认知纬度的人打交道](./cognitive-science/cross-dimensional-communication.md)：抽象↔具体、快↔慢、整体↔局部、情感↔逻辑四个核心纬度，及"观察/翻译/等待"三个核心动作，让差异变成连接的来源。
 
 ## 知识复利原则
 
