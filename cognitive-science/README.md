@@ -22,6 +22,7 @@
 | [why-most-investors-underperform-index.md](./why-most-investors-underperform-index.md) | 为什么大多数人跑不过指数 | 从行为偏差、信息过载、频繁交易与指数的反脆弱结构，拆解普通投资者的结构性亏损来源。 |
 | [cross-dimensional-communication.md](./cross-dimensional-communication.md) | 与不同认知纬度的人打交道 | 抽象↔具体、快↔慢、整体↔局部、情感↔逻辑四个核心纬度，及"观察/翻译/等待"三动作。 |
 | [stop-loss-as-cognitive-discipline.md](./stop-loss-as-cognitive-discipline.md) | 论止损的必要性 | 截断错误的反向复利：把止损从交易技术上升到承认错误的认知勇气。 |
+| [optimus-mass-production-and-tuopu-investment.md](./optimus-mass-production-and-tuopu-investment.md) | Optimus 量产与拓普集团投资框架 | 把四份卖方研报里的产线进度、价值占比、核心与弹性供应商，整理成可分批执行的判断地图。 |
 
 ## 阅读路径
 
@@ -37,6 +38,7 @@
 10. **金融市场作为认知镜子**：读"为什么大多数人跑不过指数"，把行为偏差、信息过载、频繁交易与指数的反脆弱结构，反观自身认知系统的结构性缺陷。
 11. **社会认知与跨维沟通**：读"与不同认知纬度的人打交道"，识别四种核心纬度（抽象↔具体、快↔慢、整体↔局部、情感↔逻辑），学会观察/翻译/等待，让差异变成连接的来源。
 12. **止损的反向复利**：读"论止损的必要性"，把止损从交易技术上升到承认错误的认知勇气，理解截断错误就是保护复利曲线。
+13. **主题投资与事件验证**：读"Optimus 量产与拓普集团投资框架"，把研报里的产业预期拆成产线进度、产量、出货、预期四层可观察变量，并示范如何用"分批 + 事件触发"的方式把模糊判断变成可校准的操作纪律。
 
 ## 持续扩展方向
 
