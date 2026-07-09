@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import MiniSearch from "minisearch";
+import type { AsPlainObject } from "minisearch";
 
 interface SearchDoc {
   id: string;
@@ -10,6 +11,7 @@ interface SearchDoc {
   slug: string;
   title: string;
   tags: string[];
+  headings?: string;
   excerpt: string;
 }
 
@@ -21,6 +23,16 @@ interface SearchHit {
   tags: string[];
   excerpt: string;
   score: number;
+}
+
+interface SearchIndexPayload {
+  documents?: SearchDoc[];
+  miniSearch?: unknown;
+}
+
+interface SearchIndexState {
+  index: MiniSearch<SearchDoc> | null;
+  documents: SearchDoc[];
 }
 
 // Same CJK + ASCII word tokenizer used at index build time. Keep these in
@@ -42,30 +54,97 @@ function tokenize(text: string): string[] {
 }
 
 const MAX_RESULTS = 12;
+const SEARCH_OPTIONS = {
+  boost: { title: 3, headings: 2.5, tags: 2 },
+  prefix: true,
+  fuzzy: 0.2,
+  combineWith: "AND" as const,
+};
 
-async function loadIndex(): Promise<MiniSearch<SearchDoc>> {
-  const url = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/search-index.json`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`failed to load search index: ${res.status}`);
-  }
-  const json = await res.text();
-  return MiniSearch.loadJSON<SearchDoc>(json, {
+function miniSearchOptions() {
+  return {
     fields: ["title", "headings", "tags", "excerpt"],
-    storeFields: ["title", "slug", "categorySlug", "tags", "excerpt"],
-    searchOptions: {
-      boost: { title: 3, headings: 2.5, tags: 2 },
-      prefix: true,
-      fuzzy: 0.2,
-    },
-    extractField: (doc, fieldName) => {
+    storeFields: ["title", "slug", "categorySlug", "tags", "excerpt", "headings"],
+    searchOptions: SEARCH_OPTIONS,
+    extractField: (doc: SearchDoc, fieldName: string) => {
       const value = (doc as unknown as Record<string, unknown>)[fieldName];
       if (Array.isArray(value)) return value.join(" ");
       return value == null ? "" : String(value);
     },
     tokenize,
-    processTerm: (term) => (term ? term.toLowerCase() : term),
-  });
+    processTerm: (term: string) => (term ? term.toLowerCase() : term),
+  };
+}
+
+async function fetchIndexJson(): Promise<SearchIndexPayload> {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const urls = Array.from(
+    new Set([`${basePath}/search-index.json`, "/search-index.json", "/cognix/search-index.json"])
+  );
+  const errors: string[] = [];
+
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) {
+        errors.push(`${url}: ${res.status}`);
+        continue;
+      }
+      return (await res.json()) as SearchIndexPayload;
+    } catch (err) {
+      errors.push(`${url}: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+  throw new Error(`failed to load search index (${errors.join("; ")})`);
+}
+
+async function loadIndex(): Promise<SearchIndexState> {
+  const payload = await fetchIndexJson();
+  const documents = Array.isArray(payload.documents) ? payload.documents : [];
+  const serializedIndex = payload.miniSearch ?? payload;
+
+  try {
+    return {
+      index: MiniSearch.loadJS<SearchDoc>(serializedIndex as AsPlainObject, miniSearchOptions()),
+      documents,
+    };
+  } catch (err) {
+    if (documents.length > 0) {
+      return { index: null, documents };
+    }
+    throw err;
+  }
+}
+
+function includesToken(text: string, token: string): boolean {
+  return text.toLowerCase().includes(token.toLowerCase());
+}
+
+function fallbackSearch(documents: SearchDoc[], query: string): SearchHit[] {
+  const terms = tokenize(query).filter(Boolean);
+  if (terms.length === 0) return [];
+
+  return documents
+    .map((doc) => {
+      const title = doc.title ?? "";
+      const tags = (doc.tags ?? []).join(" ");
+      const headings = doc.headings ?? "";
+      const excerpt = doc.excerpt ?? "";
+      const haystack = `${title} ${tags} ${headings} ${excerpt}`;
+      if (!terms.every((term) => includesToken(haystack, term))) return null;
+
+      let score = 0;
+      for (const term of terms) {
+        if (includesToken(title, term)) score += 8;
+        if (includesToken(tags, term)) score += 5;
+        if (includesToken(headings, term)) score += 4;
+        if (includesToken(excerpt, term)) score += 1;
+      }
+      return { ...doc, score };
+    })
+    .filter((hit): hit is SearchHit => hit !== null)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, MAX_RESULTS);
 }
 
 // Insert `<mark>` around each occurrence of any query term. Matches are
@@ -113,9 +192,9 @@ function buildSnippet(excerpt: string, terms: string[]): string {
 export function SearchDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [index, setIndex] = useState<MiniSearch<SearchDoc> | null>(null);
+  const [searchState, setSearchState] = useState<SearchIndexState | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const indexPromiseRef = useRef<Promise<MiniSearch<SearchDoc>> | null>(null);
+  const indexPromiseRef = useRef<Promise<SearchIndexState> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -150,20 +229,20 @@ export function SearchDialog() {
   // Lazy-load the index + indexer the first time the dialog is opened. The
   // ~120 KB gzipped JSON would otherwise sit in the initial page weight.
   useEffect(() => {
-    if (!isOpen || index || error) return;
+    if (!isOpen || searchState || error) return;
     if (!indexPromiseRef.current) {
       indexPromiseRef.current = loadIndex();
     }
     indexPromiseRef.current
-      .then((idx) => {
-        setIndex(idx);
+      .then((nextState) => {
+        setSearchState(nextState);
         setError(null);
       })
       .catch((err: Error) => {
         indexPromiseRef.current = null;
         setError(err.message);
       });
-  }, [error, index, isOpen]);
+  }, [error, searchState, isOpen]);
 
   // Focus the input when the dialog opens.
   useEffect(() => {
@@ -173,11 +252,12 @@ export function SearchDialog() {
   }, [isOpen]);
 
   const hits = useMemo<SearchHit[]>(() => {
-    if (!index) return [];
+    if (!searchState) return [];
     const trimmed = query.trim();
     if (trimmed.length === 0) return [];
-    const results = index.search(trimmed, { prefix: true, fuzzy: 0.2 });
-    return results.slice(0, MAX_RESULTS).map((r) => ({
+    const results =
+      searchState.index?.search(trimmed, SEARCH_OPTIONS).slice(0, MAX_RESULTS) ?? [];
+    const miniSearchHits = results.map((r) => ({
       id: r.id as string,
       categorySlug: (r as unknown as Record<string, string>).categorySlug,
       slug: (r as unknown as Record<string, string>).slug,
@@ -186,10 +266,13 @@ export function SearchDialog() {
       excerpt: (r as unknown as Record<string, string>).excerpt,
       score: r.score,
     }));
-  }, [index, query]);
+    return miniSearchHits.length > 0
+      ? miniSearchHits
+      : fallbackSearch(searchState.documents, trimmed);
+  }, [searchState, query]);
 
   const queryTerms = useMemo(() => tokenize(query.trim()), [query]);
-  const isLoading = isOpen && !index && !error;
+  const isLoading = isOpen && !searchState && !error;
 
   const isMac =
     typeof navigator !== "undefined" &&

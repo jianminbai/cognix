@@ -189,7 +189,15 @@ function main() {
   });
   index.addAll(documents);
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
-  fs.writeFileSync(outPath, JSON.stringify(index.toJSON()));
+  fs.writeFileSync(
+    outPath,
+    JSON.stringify({
+      version: 2,
+      generatedAt: new Date().toISOString(),
+      documents,
+      miniSearch: index.toJSON(),
+    })
+  );
   const bytes = fs.statSync(outPath).size;
   console.log(
     `[search-index] wrote ${documents.length} articles -> ${path.relative(webDir, outPath)} (${(bytes / 1024).toFixed(1)} kB)`
