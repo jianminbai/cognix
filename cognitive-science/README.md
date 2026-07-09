@@ -14,6 +14,7 @@
 | [cognitive-load-and-context-switching.md](./cognitive-load-and-context-switching.md) | 认知负荷与上下文切换 | 解释为什么频繁切换会吞掉深度产出，并给出任务调度、checkpoint 和注意力防抖框架。 |
 | [metacognition-and-feedback-loops.md](./metacognition-and-feedback-loops.md) | 元认知与反馈回路 | 把自己当成可调试系统，训练观察、评估和校准自身思考过程的能力。 |
 | [decision-quality-and-second-order-thinking.md](./decision-quality-and-second-order-thinking.md) | 决策质量与二阶思维 | 用概率思维、二阶后果、反事实复盘和决策日志提高判断质量。 |
+| [asking-vs-answering.md](./asking-vs-answering.md) | 把问题问对 vs 把答案做对 | 把"答案导向"与"问题导向"两种思考方式拆成时间尺度上的分工，给出可执行的问题层复盘清单。 |
 | [what-problems-should-we-solve.md](./what-problems-should-we-solve.md) | 人应该做什么样的事 | 从真实问题、复利问题、责任半径和结构改善四个坐标，判断什么问题值得投入生命资源。 |
 | [stress-resources-demands.md](./stress-resources-demands.md) | 压力与资源 | 用控制论、需求-控制模型和资源保存理论理解压力管理。 |
 | [perfectionism-vs-responsibility.md](./perfectionism-vs-responsibility.md) | 完美主义与责任心 | 区分健康责任心与失控完美主义，建立可持续的高标准。 |

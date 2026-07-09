@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SitePreferences } from "@/components/site-preferences";
+import { NavbarActions } from "@/components/navbar-actions";
 import "./globals.css";
 
 const assetBasePath = process.env.GITHUB_PAGES === "true" ? "/cognix" : "";
@@ -45,7 +45,7 @@ function Navbar() {
           >
             GitHub
           </a>
-          <SitePreferences />
+          <NavbarActions />
         </div>
       </div>
     </nav>

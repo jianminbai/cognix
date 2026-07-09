@@ -39,6 +39,7 @@ cognix/
 - [重写劳动与资本的关系](./cognitive-science/labor-capital-relations-rewritten.md)：从剩余价值、Piketty 的 r>g、监控资本主义、社会再生产四套框架，把劳动-资本关系从"等价交换"还原为五维非对称让渡。
 - [重写"黑天鹅"](./cognitive-science/black-swan-rewritten.md)：用幂律分布、自组织临界性、龙王事件、Scheffer 早期预警与网络级联，把"黑天鹅"从不可知论的天鹅复原为可识别的系统脆弱性。
 - [重写"技术不是中性的"](./cognitive-science/technology-is-not-neutral-rewritten.md)：跨越现象学、建构主义、政治经济学、批判理论、女性主义、后殖民、算法治理七条脉络，把"技术非中性"展开为十种可识别机制。
+- [把问题问对 vs 把答案做对](./cognitive-science/asking-vs-answering.md)：把"答案导向"与"问题导向"两种思考方式拆成时间尺度上的分工，给出"写出三个版本的问题、把假设分离、用无效事件做反馈、半年做问题层复盘"的可执行清单，识别工业化奖励机制造成的认知偏置。
 
 ## 知识复利原则
 
