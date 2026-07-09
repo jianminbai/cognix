@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import Link from "next/link";
+import { createPortal } from "react-dom";
 import MiniSearch from "minisearch";
 import type { AsPlainObject } from "minisearch";
 
@@ -251,6 +251,15 @@ export function SearchDialog() {
     return () => window.clearTimeout(id);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
   const hits = useMemo<SearchHit[]>(() => {
     if (!searchState) return [];
     const trimmed = query.trim();
@@ -278,24 +287,8 @@ export function SearchDialog() {
     typeof navigator !== "undefined" &&
     /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent || "");
   const shortcutHint = isMac ? "⌘ K" : "Ctrl K";
-
-  return (
-    <>
-      <button
-        type="button"
-        className="search-trigger"
-        onClick={open}
-        aria-label="Open article search"
-      >
-        <SearchIcon />
-        <span className="search-trigger-label lang-zh">搜索文章</span>
-        <span className="search-trigger-label lang-en">Search</span>
-        <span className="search-shortcut" aria-hidden="true">
-          {shortcutHint}
-        </span>
-      </button>
-
-      {isOpen ? (
+  const dialog = isOpen && typeof document !== "undefined"
+    ? createPortal(
         <div
           className="search-backdrop"
           role="presentation"
@@ -340,8 +333,8 @@ export function SearchDialog() {
                 </div>
               ) : isLoading ? (
                 <div className="search-empty">
-                  <span className="lang-zh">加载索引…</span>
-                  <span className="lang-en">Loading index…</span>
+                  <span className="lang-zh">加载索引...</span>
+                  <span className="lang-en">Loading index...</span>
                 </div>
               ) : query.trim().length === 0 ? (
                 <div className="search-empty">
@@ -361,7 +354,7 @@ export function SearchDialog() {
                     const snippet = buildSnippet(hit.excerpt, queryTerms);
                     return (
                       <li key={hit.id}>
-                        <Link
+                        <a
                           href={`/article/${hit.categorySlug}/${hit.slug}/`}
                           className="search-result"
                           onClick={close}
@@ -381,7 +374,7 @@ export function SearchDialog() {
                               ))}
                             </span>
                           ) : null}
-                        </Link>
+                        </a>
                       </li>
                     );
                   })}
@@ -402,8 +395,27 @@ export function SearchDialog() {
               </span>
             </div>
           </div>
-        </div>
-      ) : null}
+        </div>,
+        document.body
+      )
+    : null;
+
+  return (
+    <>
+      <button
+        type="button"
+        className="search-trigger"
+        onClick={open}
+        aria-label="Open article search"
+      >
+        <SearchIcon />
+        <span className="search-trigger-label lang-zh">搜索文章</span>
+        <span className="search-trigger-label lang-en">Search</span>
+        <span className="search-shortcut" aria-hidden="true">
+          {shortcutHint}
+        </span>
+      </button>
+      {dialog}
     </>
   );
 }
