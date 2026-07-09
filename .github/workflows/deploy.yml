@@ -39,6 +39,7 @@ jobs:
         working-directory: web
         env:
           GITHUB_PAGES: "true"
+          CUSTOM_DOMAIN: "true"
         run: npm run build
 
       - name: Upload artifact
