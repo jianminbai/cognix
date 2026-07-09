@@ -23,6 +23,10 @@
 | [cross-dimensional-communication.md](./cross-dimensional-communication.md) | 与不同认知纬度的人打交道 | 抽象↔具体、快↔慢、整体↔局部、情感↔逻辑四个核心纬度，及"观察/翻译/等待"三动作。 |
 | [stop-loss-as-cognitive-discipline.md](./stop-loss-as-cognitive-discipline.md) | 论止损的必要性 | 截断错误的反向复利：把止损从交易技术上升到承认错误的认知勇气。 |
 | [optimus-mass-production-and-tuopu-investment.md](./optimus-mass-production-and-tuopu-investment.md) | Optimus 量产与拓普集团投资框架 | 把四份卖方研报里的产线进度、价值占比、核心与弹性供应商，整理成可分批执行的判断地图。 |
+| [urbanization-rewritten.md](./urbanization-rewritten.md) | 重写城市化认知 | 超越"人口迁移"叙事，用城市标度律、行星城市化、网络城市与城市代谢四套框架把"城市化"重构为多维度、永远进行中的复杂适应过程。 |
+| [labor-capital-relations-rewritten.md](./labor-capital-relations-rewritten.md) | 重写劳动与资本的关系 | 从剩余价值、Piketty 的 r>g、监控资本主义、社会再生产四套框架，把劳动-资本关系从"等价交换"还原为五维非对称让渡。 |
+| [black-swan-rewritten.md](./black-swan-rewritten.md) | 重写"黑天鹅" | 用幂律分布、自组织临界性、龙王事件、Scheffer 早期预警与网络级联，把"黑天鹅"从不可知论的天鹅复原为可识别的系统脆弱性。 |
+| [technology-is-not-neutral-rewritten.md](./technology-is-not-neutral-rewritten.md) | 重写"技术不是中性的" | 跨越现象学、建构主义、政治经济学、批判理论、女性主义、后殖民、算法治理七条脉络，把"技术非中性"展开为十种可识别机制。 |
 
 ## 阅读路径
 

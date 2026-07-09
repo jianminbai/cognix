@@ -35,6 +35,10 @@ cognix/
 - [为什么大多数人股票投资跑不过指数](./cognitive-science/why-most-investors-underperform-index.md)：从行为偏差、信息过载、频繁交易与指数的反脆弱结构，拆解普通投资者的结构性亏损来源，并把股市作为认知的镜子反观自身。
 - [与不同认知纬度的人打交道](./cognitive-science/cross-dimensional-communication.md)：抽象↔具体、快↔慢、整体↔局部、情感↔逻辑四个核心纬度，及"观察/翻译/等待"三个核心动作，让差异变成连接的来源。
 - [论止损的必要性](./cognitive-science/stop-loss-as-cognitive-discipline.md)：从损失厌恶、沉没成本、锚定与处置效应拆解不愿止损的认知枷锁，提出止损的反向复利，并把止损上升到人生维度的认知勇气。
+- [重写城市化认知](./cognitive-science/urbanization-rewritten.md)：超越"人口迁移"叙事，用城市标度律、行星城市化、网络城市与城市代谢四套框架把"城市化"重构为多维度、永远进行中的复杂适应过程。
+- [重写劳动与资本的关系](./cognitive-science/labor-capital-relations-rewritten.md)：从剩余价值、Piketty 的 r>g、监控资本主义、社会再生产四套框架，把劳动-资本关系从"等价交换"还原为五维非对称让渡。
+- [重写"黑天鹅"](./cognitive-science/black-swan-rewritten.md)：用幂律分布、自组织临界性、龙王事件、Scheffer 早期预警与网络级联，把"黑天鹅"从不可知论的天鹅复原为可识别的系统脆弱性。
+- [重写"技术不是中性的"](./cognitive-science/technology-is-not-neutral-rewritten.md)：跨越现象学、建构主义、政治经济学、批判理论、女性主义、后殖民、算法治理七条脉络，把"技术非中性"展开为十种可识别机制。
 
 ## 知识复利原则
 
