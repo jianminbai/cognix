@@ -113,10 +113,9 @@ function buildSnippet(excerpt: string, terms: string[]): string {
 export function SearchDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [hits, setHits] = useState<SearchHit[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [index, setIndex] = useState<MiniSearch<SearchDoc> | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const indexRef = useRef<MiniSearch<SearchDoc> | null>(null);
+  const indexPromiseRef = useRef<Promise<MiniSearch<SearchDoc>> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -127,7 +126,6 @@ export function SearchDialog() {
   const close = useCallback(() => {
     setIsOpen(false);
     setQuery("");
-    setHits([]);
     setError(null);
   }, []);
 
@@ -152,16 +150,20 @@ export function SearchDialog() {
   // Lazy-load the index + indexer the first time the dialog is opened. The
   // ~120 KB gzipped JSON would otherwise sit in the initial page weight.
   useEffect(() => {
-    if (!isOpen || indexRef.current || isLoading) return;
-    setIsLoading(true);
-    loadIndex()
+    if (!isOpen || index || error) return;
+    if (!indexPromiseRef.current) {
+      indexPromiseRef.current = loadIndex();
+    }
+    indexPromiseRef.current
       .then((idx) => {
-        indexRef.current = idx;
+        setIndex(idx);
         setError(null);
       })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setIsLoading(false));
-  }, [isOpen, isLoading]);
+      .catch((err: Error) => {
+        indexPromiseRef.current = null;
+        setError(err.message);
+      });
+  }, [error, index, isOpen]);
 
   // Focus the input when the dialog opens.
   useEffect(() => {
@@ -170,33 +172,24 @@ export function SearchDialog() {
     return () => window.clearTimeout(id);
   }, [isOpen]);
 
-  // Run the actual search on every keystroke. The index is small so there's
-  // no need to debounce; the operation costs sub-millisecond per query.
-  useEffect(() => {
-    if (!indexRef.current) {
-      setHits([]);
-      return;
-    }
+  const hits = useMemo<SearchHit[]>(() => {
+    if (!index) return [];
     const trimmed = query.trim();
-    if (trimmed.length === 0) {
-      setHits([]);
-      return;
-    }
-    const results = indexRef.current.search(trimmed, { prefix: true, fuzzy: 0.2 });
-    setHits(
-      results.slice(0, MAX_RESULTS).map((r) => ({
-        id: r.id as string,
-        categorySlug: (r as unknown as Record<string, string>).categorySlug,
-        slug: (r as unknown as Record<string, string>).slug,
-        title: (r as unknown as Record<string, string>).title,
-        tags: (r as unknown as Record<string, string[]>).tags ?? [],
-        excerpt: (r as unknown as Record<string, string>).excerpt,
-        score: r.score,
-      }))
-    );
-  }, [query]);
+    if (trimmed.length === 0) return [];
+    const results = index.search(trimmed, { prefix: true, fuzzy: 0.2 });
+    return results.slice(0, MAX_RESULTS).map((r) => ({
+      id: r.id as string,
+      categorySlug: (r as unknown as Record<string, string>).categorySlug,
+      slug: (r as unknown as Record<string, string>).slug,
+      title: (r as unknown as Record<string, string>).title,
+      tags: (r as unknown as Record<string, string[]>).tags ?? [],
+      excerpt: (r as unknown as Record<string, string>).excerpt,
+      score: r.score,
+    }));
+  }, [index, query]);
 
   const queryTerms = useMemo(() => tokenize(query.trim()), [query]);
+  const isLoading = isOpen && !index && !error;
 
   const isMac =
     typeof navigator !== "undefined" &&

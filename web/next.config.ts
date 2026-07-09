@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   basePath: isGitHubPages ? "/cognix" : undefined,
   assetPrefix: isGitHubPages ? "/cognix/" : undefined,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isGitHubPages ? "/cognix" : "",
+  },
   images: {
     unoptimized: true,
   },

@@ -17,7 +17,7 @@ export async function generateMetadata({
   const { category, slug } = await params;
   const article = await getArticle(category, slug);
   return {
-    title: article ? `${article.title} - cogniX` : "cogniX",
+    title: article ? `${article.title} - JmBai` : "JmBai",
   };
 }
 

@@ -15,7 +15,7 @@ export async function generateMetadata({
   const categories = getCategories();
   const cat = categories.find((c) => c.slug === slug);
   return {
-    title: cat ? `${cat.name} - cogniX` : "cogniX",
+    title: cat ? `${cat.name} - JmBai` : "JmBai",
     description: cat?.description,
   };
 }

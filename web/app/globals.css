@@ -95,8 +95,49 @@ body.lang-en .lang-zh {
 }
 
 .brand-logo {
-  border-radius: 0.75rem;
-  box-shadow: 0 0 30px var(--shadow-cyan);
+  position: relative;
+  display: inline-grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--accent) 46%, var(--line));
+  border-radius: 0.7rem;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 82%, white), color-mix(in srgb, var(--accent-light) 84%, #111827)),
+    var(--card-bg);
+  color: #031019;
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  box-shadow:
+    0 0 30px var(--shadow-cyan),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+.brand-logo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 18%, rgba(255, 255, 255, 0.38) 42%, transparent 62%);
+  transform: translateX(-72%);
+  transition: transform 260ms ease;
+}
+
+a:hover .brand-logo::after {
+  transform: translateX(72%);
+}
+
+.brand-logo span {
+  position: relative;
+  z-index: 1;
+}
+
+.brand-wordmark {
+  color: var(--foreground);
+  font-size: 1.08rem;
+  font-weight: 800;
+  letter-spacing: 0;
 }
 
 .nav-link {
