@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import MiniSearch from "minisearch";
-import type { AsPlainObject } from "minisearch";
 
 interface SearchDoc {
   id: string;
@@ -15,386 +13,227 @@ interface SearchDoc {
   excerpt: string;
 }
 
-interface SearchHit {
-  id: string;
-  categorySlug: string;
-  slug: string;
-  title: string;
-  tags: string[];
-  excerpt: string;
+interface SearchHit extends SearchDoc {
   score: number;
 }
 
-interface SearchIndexPayload {
+interface SearchPayload {
   documents?: SearchDoc[];
-  miniSearch?: unknown;
 }
 
-interface SearchIndexState {
-  index: MiniSearch<SearchDoc> | null;
-  documents: SearchDoc[];
+const MAX_RESULTS = 10;
+const QUICK_QUERIES = ["复利", "认知偏差", "复杂系统", "注意力"];
+
+function normalize(value: string) {
+  return value.toLocaleLowerCase().normalize("NFKC").replace(/\s+/g, " ").trim();
 }
 
-// Same CJK + ASCII word tokenizer used at index build time. Keep these in
-// sync — if either side changes the other must follow.
-function tokenize(text: string): string[] {
-  if (!text) return [];
-  const tokens: string[] = [];
-  const wordRe = /[A-Za-z0-9_]+/g;
-  let m: RegExpExecArray | null;
-  while ((m = wordRe.exec(text)) !== null) {
-    tokens.push(m[0].toLowerCase());
-  }
-  for (const ch of text) {
-    if (/[一-鿿㐀-䶿]/.test(ch)) {
-      tokens.push(ch);
-    }
-  }
-  return tokens;
+function queryTerms(query: string) {
+  const normalized = normalize(query);
+  if (!normalized) return [];
+  const chunks = normalized.match(/[\p{Script=Han}]+|[a-z0-9_]+/gu) ?? [];
+  return Array.from(new Set([normalized, ...chunks]));
 }
 
-const MAX_RESULTS = 12;
-const SEARCH_OPTIONS = {
-  boost: { title: 3, headings: 2.5, tags: 2 },
-  prefix: true,
-  fuzzy: 0.2,
-  combineWith: "AND" as const,
-};
-
-function miniSearchOptions() {
-  return {
-    fields: ["title", "headings", "tags", "excerpt"],
-    storeFields: ["title", "slug", "categorySlug", "tags", "excerpt", "headings"],
-    searchOptions: SEARCH_OPTIONS,
-    extractField: (doc: SearchDoc, fieldName: string) => {
-      const value = (doc as unknown as Record<string, unknown>)[fieldName];
-      if (Array.isArray(value)) return value.join(" ");
-      return value == null ? "" : String(value);
-    },
-    tokenize,
-    processTerm: (term: string) => (term ? term.toLowerCase() : term),
-  };
-}
-
-async function fetchIndexJson(): Promise<SearchIndexPayload> {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-  const urls = Array.from(
-    new Set([`${basePath}/search-index.json`, "/search-index.json", "/cognix/search-index.json"])
-  );
-  const errors: string[] = [];
-
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) {
-        errors.push(`${url}: ${res.status}`);
-        continue;
-      }
-      return (await res.json()) as SearchIndexPayload;
-    } catch (err) {
-      errors.push(`${url}: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  }
-  throw new Error(`failed to load search index (${errors.join("; ")})`);
-}
-
-async function loadIndex(): Promise<SearchIndexState> {
-  const payload = await fetchIndexJson();
-  const documents = Array.isArray(payload.documents) ? payload.documents : [];
-  const serializedIndex = payload.miniSearch ?? payload;
-
-  try {
-    return {
-      index: MiniSearch.loadJS<SearchDoc>(serializedIndex as AsPlainObject, miniSearchOptions()),
-      documents,
-    };
-  } catch (err) {
-    if (documents.length > 0) {
-      return { index: null, documents };
-    }
-    throw err;
-  }
-}
-
-function includesToken(text: string, token: string): boolean {
-  return text.toLowerCase().includes(token.toLowerCase());
-}
-
-function fallbackSearch(documents: SearchDoc[], query: string): SearchHit[] {
-  const terms = tokenize(query).filter(Boolean);
-  if (terms.length === 0) return [];
+function scoreDocuments(documents: SearchDoc[], query: string): SearchHit[] {
+  const phrase = normalize(query);
+  const terms = queryTerms(query);
+  if (!phrase || terms.length === 0) return [];
 
   return documents
     .map((doc) => {
-      const title = doc.title ?? "";
-      const tags = (doc.tags ?? []).join(" ");
-      const headings = doc.headings ?? "";
-      const excerpt = doc.excerpt ?? "";
-      const haystack = `${title} ${tags} ${headings} ${excerpt}`;
-      if (!terms.every((term) => includesToken(haystack, term))) return null;
+      const title = normalize(doc.title);
+      const tags = normalize(doc.tags.join(" "));
+      const headings = normalize(doc.headings ?? "");
+      const excerpt = normalize(doc.excerpt);
+      const all = `${title} ${tags} ${headings} ${excerpt}`;
+      if (!terms.every((term) => all.includes(term))) return null;
 
       let score = 0;
+      if (title === phrase) score += 80;
+      if (title.includes(phrase)) score += 36;
+      if (tags.includes(phrase)) score += 24;
+      if (headings.includes(phrase)) score += 16;
+      if (excerpt.includes(phrase)) score += 8;
       for (const term of terms) {
-        if (includesToken(title, term)) score += 8;
-        if (includesToken(tags, term)) score += 5;
-        if (includesToken(headings, term)) score += 4;
-        if (includesToken(excerpt, term)) score += 1;
+        if (title.includes(term)) score += 12;
+        if (tags.includes(term)) score += 8;
+        if (headings.includes(term)) score += 5;
+        if (excerpt.includes(term)) score += 1;
       }
       return { ...doc, score };
     })
     .filter((hit): hit is SearchHit => hit !== null)
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, "zh-CN"))
     .slice(0, MAX_RESULTS);
 }
 
-// Insert `<mark>` around each occurrence of any query term. Matches are
-// case-insensitive and split so they survive mixed-language prefixes.
-function highlight(text: string, terms: string[]): ReactNode {
+async function fetchDocuments(): Promise<SearchDoc[]> {
+  const configuredBase = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const candidates = Array.from(
+    new Set([`${configuredBase}/search-index.json`, "/search-index.json", "/cognix/search-index.json"])
+  );
+  const failures: string[] = [];
+
+  for (const url of candidates) {
+    try {
+      const response = await fetch(url, { cache: "force-cache" });
+      if (!response.ok) {
+        failures.push(`${url} (${response.status})`);
+        continue;
+      }
+      const payload = (await response.json()) as SearchPayload | SearchDoc[];
+      const documents = Array.isArray(payload) ? payload : payload.documents;
+      if (Array.isArray(documents) && documents.length > 0) return documents;
+      failures.push(`${url} (empty)`);
+    } catch {
+      failures.push(`${url} (network)`);
+    }
+  }
+  throw new Error(failures.join(" · "));
+}
+
+function highlight(text: string, query: string): ReactNode {
+  const terms = queryTerms(query).sort((a, b) => b.length - a.length);
   if (!text || terms.length === 0) return text;
-  const escaped = terms
-    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-    .filter((t) => t.length > 0);
-  if (escaped.length === 0) return text;
-  const re = new RegExp(`(${escaped.join("|")})`, "ig");
-  const parts = text.split(re);
-  return parts.map((part, i) =>
-    re.test(part) && i % 2 === 1 ? (
-      <mark key={i} className="search-hit-mark">
-        {part}
-      </mark>
+  const escaped = terms.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const expression = new RegExp(`(${escaped.join("|")})`, "ig");
+  return text.split(expression).map((part, index) =>
+    terms.some((term) => normalize(part) === term) ? (
+      <mark key={`${part}-${index}`} className="search-hit-mark">{part}</mark>
     ) : (
-      <span key={i}>{part}</span>
+      <span key={`${part}-${index}`}>{part}</span>
     )
   );
 }
 
-// Build a snippet that concentrates around the first matching term so the
-// preview shows why this hit was returned.
-function buildSnippet(excerpt: string, terms: string[]): string {
-  if (!excerpt) return "";
-  if (terms.length === 0) return excerpt.slice(0, 140);
-  const lower = excerpt.toLowerCase();
-  let earliest = -1;
-  for (const t of terms) {
-    const idx = lower.indexOf(t.toLowerCase());
-    if (idx !== -1 && (earliest === -1 || idx < earliest)) {
-      earliest = idx;
-    }
-  }
-  if (earliest === -1) return excerpt.slice(0, 140);
-  const start = Math.max(0, earliest - 30);
-  const end = Math.min(excerpt.length, earliest + 110);
-  const prefix = start > 0 ? "…" : "";
-  const suffix = end < excerpt.length ? "…" : "";
-  return prefix + excerpt.slice(start, end) + suffix;
+function snippet(excerpt: string, query: string) {
+  const normalizedExcerpt = normalize(excerpt);
+  const positions = queryTerms(query)
+    .map((term) => normalizedExcerpt.indexOf(term))
+    .filter((position) => position >= 0);
+  const position = positions.length > 0 ? Math.min(...positions) : 0;
+  const start = Math.max(0, position - 34);
+  const end = Math.min(excerpt.length, start + 150);
+  return `${start > 0 ? "…" : ""}${excerpt.slice(start, end)}${end < excerpt.length ? "…" : ""}`;
 }
 
-export function SearchDialog() {
+export function SearchDialog({ prominent = false }: { prominent?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [searchState, setSearchState] = useState<SearchIndexState | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const indexPromiseRef = useRef<Promise<SearchIndexState> | null>(null);
+  const [documents, setDocuments] = useState<SearchDoc[] | null>(null);
+  const [error, setError] = useState(false);
+  const requestRef = useRef<Promise<SearchDoc[]> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
 
-  const open = useCallback(() => {
-    setIsOpen(true);
-  }, []);
-
+  const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
     setIsOpen(false);
     setQuery("");
-    setError(null);
   }, []);
 
-  // Cmd/Ctrl+K toggles the dialog from anywhere on the page.
   useEffect(() => {
-    function onKeydown(event: KeyboardEvent) {
-      const isOpenShortcut =
-        (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
-      if (isOpenShortcut) {
+    function onKeyDown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        setIsOpen((v) => !v);
-        return;
-      }
-      if (event.key === "Escape") {
+        setIsOpen((value) => !value);
+      } else if (event.key === "Escape") {
         setIsOpen(false);
       }
     }
-    window.addEventListener("keydown", onKeydown);
-    return () => window.removeEventListener("keydown", onKeydown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  // Lazy-load the index + indexer the first time the dialog is opened. The
-  // ~120 KB gzipped JSON would otherwise sit in the initial page weight.
   useEffect(() => {
-    if (!isOpen || searchState || error) return;
-    if (!indexPromiseRef.current) {
-      indexPromiseRef.current = loadIndex();
-    }
-    indexPromiseRef.current
-      .then((nextState) => {
-        setSearchState(nextState);
-        setError(null);
-      })
-      .catch((err: Error) => {
-        indexPromiseRef.current = null;
-        setError(err.message);
+    if (!isOpen || documents || error) return;
+    requestRef.current ??= fetchDocuments();
+    requestRef.current
+      .then((items) => setDocuments(items))
+      .catch(() => {
+        requestRef.current = null;
+        setError(true);
       });
-  }, [error, searchState, isOpen]);
-
-  // Focus the input when the dialog opens.
-  useEffect(() => {
-    if (!isOpen) return;
-    const id = window.setTimeout(() => inputRef.current?.focus(), 30);
-    return () => window.clearTimeout(id);
-  }, [isOpen]);
+  }, [documents, error, isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
-    const previousOverflow = document.body.style.overflow;
+    const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const timer = window.setTimeout(() => inputRef.current?.focus(), 20);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      window.clearTimeout(timer);
+      document.body.style.overflow = previous;
     };
   }, [isOpen]);
 
-  const hits = useMemo<SearchHit[]>(() => {
-    if (!searchState) return [];
-    const trimmed = query.trim();
-    if (trimmed.length === 0) return [];
-    const results =
-      searchState.index?.search(trimmed, SEARCH_OPTIONS).slice(0, MAX_RESULTS) ?? [];
-    const miniSearchHits = results.map((r) => ({
-      id: r.id as string,
-      categorySlug: (r as unknown as Record<string, string>).categorySlug,
-      slug: (r as unknown as Record<string, string>).slug,
-      title: (r as unknown as Record<string, string>).title,
-      tags: (r as unknown as Record<string, string[]>).tags ?? [],
-      excerpt: (r as unknown as Record<string, string>).excerpt,
-      score: r.score,
-    }));
-    return miniSearchHits.length > 0
-      ? miniSearchHits
-      : fallbackSearch(searchState.documents, trimmed);
-  }, [searchState, query]);
+  const hits = useMemo(() => scoreDocuments(documents ?? [], query), [documents, query]);
+  const hasQuery = query.trim().length > 0;
 
-  const queryTerms = useMemo(() => tokenize(query.trim()), [query]);
-  const isLoading = isOpen && !searchState && !error;
-
-  const isMac =
-    typeof navigator !== "undefined" &&
-    /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent || "");
-  const shortcutHint = isMac ? "⌘ K" : "Ctrl K";
   const dialog = isOpen && typeof document !== "undefined"
     ? createPortal(
-        <div
-          className="search-backdrop"
-          role="presentation"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) close();
-          }}
-        >
-          <div
-            ref={dialogRef}
-            className="search-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Article search"
-          >
-            <div className="search-dialog-head">
+        <div className="search-backdrop" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) close();
+        }}>
+          <section className="search-dialog" role="dialog" aria-modal="true" aria-label="文章搜索">
+            <header className="search-dialog-head">
               <SearchIcon />
               <input
                 ref={inputRef}
-                type="search"
                 className="search-input"
-                placeholder="搜索全部文章 / Search all articles"
+                type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
+                placeholder="搜索概念、问题或文章"
                 autoComplete="off"
                 spellCheck={false}
               />
-              <button
-                type="button"
-                className="search-close"
-                onClick={close}
-                aria-label="Close search"
-              >
-                <span className="lang-zh">关闭</span>
-                <span className="lang-en">Esc</span>
-              </button>
-            </div>
+              <button type="button" className="search-close" onClick={close} aria-label="关闭搜索">Esc</button>
+            </header>
+
             <div className="search-dialog-body">
               {error ? (
-                <div className="search-empty">
-                  <span className="lang-zh">索引加载失败：{error}</span>
-                  <span className="lang-en">Failed to load index: {error}</span>
+                <div className="search-state">
+                  <strong>搜索索引暂时无法加载</strong>
+                  <span>请刷新页面后重试。</span>
+                  <button type="button" onClick={() => setError(false)}>重新加载</button>
                 </div>
-              ) : isLoading ? (
-                <div className="search-empty">
-                  <span className="lang-zh">加载索引...</span>
-                  <span className="lang-en">Loading index...</span>
-                </div>
-              ) : query.trim().length === 0 ? (
-                <div className="search-empty">
-                  <span className="lang-zh">输入关键词以搜索标题、章节、标签和正文。</span>
-                  <span className="lang-en">
-                    Type to search titles, headings, tags, and body text.
-                  </span>
+              ) : !documents ? (
+                <div className="search-state"><span className="search-loader" />正在准备全文索引</div>
+              ) : !hasQuery ? (
+                <div className="search-intro">
+                  <p>从一个概念开始，进入相关的标题、章节与正文。</p>
+                  <div className="search-suggestions">
+                    {QUICK_QUERIES.map((item) => (
+                      <button key={item} type="button" onClick={() => setQuery(item)}>{item}</button>
+                    ))}
+                  </div>
                 </div>
               ) : hits.length === 0 ? (
-                <div className="search-empty">
-                  <span className="lang-zh">没有匹配的文章。</span>
-                  <span className="lang-en">No matches.</span>
-                </div>
+                <div className="search-state"><strong>没有找到“{query}”</strong><span>试试更短的概念或相近表达。</span></div>
               ) : (
                 <ul className="search-results">
-                  {hits.map((hit) => {
-                    const snippet = buildSnippet(hit.excerpt, queryTerms);
-                    return (
-                      <li key={hit.id}>
-                        <a
-                          href={`/article/${hit.categorySlug}/${hit.slug}/`}
-                          className="search-result"
-                          onClick={close}
-                        >
-                          <span className="search-result-title">
-                            {highlight(hit.title, queryTerms)}
-                          </span>
-                          <span className="search-result-snippet">
-                            {highlight(snippet, queryTerms)}
-                          </span>
-                          {hit.tags.length > 0 ? (
-                            <span className="search-result-tags">
-                              {hit.tags.map((tag) => (
-                                <span key={tag} className="tag-chip">
-                                  {tag}
-                                </span>
-                              ))}
-                            </span>
-                          ) : null}
-                        </a>
-                      </li>
-                    );
-                  })}
+                  {hits.map((hit, index) => (
+                    <li key={hit.id}>
+                      <a href={`/article/${hit.categorySlug}/${hit.slug}/`} className="search-result">
+                        <span className="search-result-index">{String(index + 1).padStart(2, "0")}</span>
+                        <span className="search-result-content">
+                          <strong>{highlight(hit.title, query)}</strong>
+                          <span>{highlight(snippet(hit.excerpt, query), query)}</span>
+                          <small>{hit.tags.slice(0, 3).join(" · ")}</small>
+                        </span>
+                        <span className="search-result-arrow" aria-hidden="true">↗</span>
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>
-            <div className="search-dialog-foot">
-              <span className="lang-zh">
-                {hits.length} 条结果 · 按相关度排序
-              </span>
-              <span className="lang-en">
-                {hits.length} results · ranked by relevance
-              </span>
-              <span className="search-foot-spacer" />
-              <span>
-                <span className="lang-zh">按 Esc 关闭</span>
-                <span className="lang-en">Esc to close</span>
-              </span>
-            </div>
-          </div>
+            <footer className="search-dialog-foot">
+              <span>{hasQuery ? `${hits.length} 个结果` : `${documents?.length ?? 0} 篇文章`}</span>
+              <span>全文检索</span>
+            </footer>
+          </section>
         </div>,
         document.body
       )
@@ -402,18 +241,11 @@ export function SearchDialog() {
 
   return (
     <>
-      <button
-        type="button"
-        className="search-trigger"
-        onClick={open}
-        aria-label="Open article search"
-      >
+      <button type="button" className={prominent ? "search-trigger search-trigger-prominent" : "search-trigger"} onClick={open} aria-label="搜索文章">
         <SearchIcon />
-        <span className="search-trigger-label lang-zh">搜索文章</span>
-        <span className="search-trigger-label lang-en">Search</span>
-        <span className="search-shortcut" aria-hidden="true">
-          {shortcutHint}
-        </span>
+        <span className="lang-zh">{prominent ? "搜索一个你正在思考的问题" : "搜索"}</span>
+        <span className="lang-en">{prominent ? "Search a question you are thinking about" : "Search"}</span>
+        <kbd>{prominent ? "Ctrl K" : "K"}</kbd>
       </button>
       {dialog}
     </>
@@ -422,20 +254,9 @@ export function SearchDialog() {
 
 function SearchIcon() {
   return (
-    <svg
-      className="search-icon"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
+    <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <circle cx="11" cy="11" r="7" />
-      <line x1="20" y1="20" x2="16.65" y2="16.65" />
+      <path d="m20 20-4-4" />
     </svg>
   );
 }

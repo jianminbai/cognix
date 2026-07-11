@@ -4,69 +4,39 @@ import { NavbarActions } from "@/components/navbar-actions";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "JmBai - 认知复利实验室",
-  description:
-    "认知科学与个人知识复利平台，沉淀注意力、元认知、决策质量、问题选择和长期成长。",
-  keywords: ["知识管理", "认知科学", "元认知", "决策质量", "知识复利"],
+  title: "JmBai - 认知复利",
+  description: "从观察问题，到校准判断，再到形成长期复利。",
+  keywords: ["认知", "思考", "判断", "决策", "长期主义"],
 };
 
 function Navbar() {
   return (
     <nav className="site-nav">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="brand-logo" aria-hidden="true">
-            <span>Jm</span>
-          </span>
-          <span className="brand-wordmark">JmBai</span>
+      <div className="nav-inner">
+        <Link href="/" className="brand" aria-label="JmBai 首页">
+          <span className="brand-logo"><b>Jm</b><i /></span>
+          <span className="brand-wordmark">JmBai<small>认知复利</small></span>
         </Link>
-        <div className="flex items-center gap-4 text-sm sm:gap-5">
-          <Link href="/#atlas" className="nav-link">
-            <span className="lang-zh">认知地图</span>
-            <span className="lang-en">Atlas</span>
-          </Link>
-          <Link href="/category/cognitive-science/" className="nav-link">
-            <span className="lang-zh">文章</span>
-            <span className="lang-en">Articles</span>
-          </Link>
-          <a
-            href="https://github.com/jianminbai/cognix"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-link hidden sm:inline"
-          >
-            GitHub
-          </a>
-          <NavbarActions />
+        <div className="nav-center">
+          <Link href="/#atlas"><span className="lang-zh">认知路径</span><span className="lang-en">Path</span></Link>
+          <Link href="/category/cognitive-science/"><span className="lang-zh">全部文章</span><span className="lang-en">Articles</span></Link>
+          <a href="https://github.com/jianminbai/cognix" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
+        <NavbarActions />
       </div>
     </nav>
   );
 }
 
-function Footer() {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <footer className="site-footer">
-      <div className="mx-auto max-w-7xl px-5">
-        JmBai &copy; {new Date().getFullYear()} ·{" "}
-        <span className="lang-zh">知识的内化结构和连接密度更重要。</span>
-        <span className="lang-en">Structure and connection density matter more than volume.</span>
-      </div>
-    </footer>
-  );
-}
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="zh-CN" className="h-full antialiased" data-theme="dark" data-lang="zh">
-      <body className="site-body theme-dark lang-zh min-h-full">
+    <html lang="zh-CN" data-theme="dark" data-lang="zh">
+      <body className="site-body theme-dark lang-zh">
         <Navbar />
         <main>{children}</main>
-        <Footer />
+        <footer className="site-footer">
+          <div className="page-shell"><span>JmBai © {new Date().getFullYear()}</span><span>保持观察，持续校准。</span></div>
+        </footer>
       </body>
     </html>
   );
