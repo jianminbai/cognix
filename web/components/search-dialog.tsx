@@ -70,14 +70,18 @@ function scoreDocuments(documents: SearchDoc[], query: string): SearchHit[] {
 
 async function fetchDocuments(): Promise<SearchDoc[]> {
   const configuredBase = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const cacheKey = Date.now().toString(36);
   const candidates = Array.from(
     new Set([`${configuredBase}/search-index.json`, "/search-index.json", "/cognix/search-index.json"])
-  );
+  ).map((url) => `${url}?v=${cacheKey}`);
   const failures: string[] = [];
 
   for (const url of candidates) {
     try {
-      const response = await fetch(url, { cache: "force-cache" });
+      const response = await fetch(url, {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
+      });
       if (!response.ok) {
         failures.push(`${url} (${response.status})`);
         continue;
