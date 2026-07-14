@@ -125,6 +125,44 @@ body.lang-zh .lang-en, body.lang-en .lang-zh { display: none !important; }
 .featured-main small, .featured-size { color: var(--muted); font-size: 11px; }
 .featured-arrow { color: var(--accent); font-size: 20px; text-align: right; }
 
+/* About */
+.about-page { padding-top: 72px; }
+.about-hero { position: relative; min-height: 650px; display: flex; align-items: stretch; overflow: hidden; border-bottom: 1px solid var(--line); }
+.about-grid { position: absolute; inset: 0; opacity: .55; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 72px 72px; mask-image: linear-gradient(to right, #000 0 72%, transparent 100%); }
+.about-hero-layout { position: relative; display: grid; grid-template-columns: 1.18fr .82fr; align-items: center; gap: 70px; padding-block: 82px; }
+.about-heading h1 { max-width: 800px; margin: 28px 0 0; font-size: clamp(50px, 6vw, 82px); line-height: 1.08; font-weight: 760; letter-spacing: 0; }
+.about-mark { position: relative; aspect-ratio: 1; width: min(100%, 420px); display: grid; place-content: center; justify-self: end; border: 1px solid var(--line); background: var(--surface); }
+.about-mark::before, .about-mark::after { content: ""; position: absolute; background: var(--line); }
+.about-mark::before { width: 1px; inset: 0 auto 0 50%; }
+.about-mark::after { height: 1px; inset: 50% 0 auto; }
+.about-mark > strong { position: relative; z-index: 1; color: var(--accent); font-size: 92px; font-weight: 900; line-height: .9; }
+.about-mark > div { position: relative; z-index: 1; display: flex; justify-content: space-between; margin-top: 18px; color: var(--muted); font: 9px var(--font-mono); letter-spacing: .14em; }
+.about-mark-index { position: absolute; left: 16px; top: 16px; color: var(--muted); font: 9px var(--font-mono); letter-spacing: .12em; }
+.about-mark > i { position: absolute; width: 10px; height: 10px; right: 15%; top: 18%; border-radius: 50%; background: var(--coral); box-shadow: 0 0 0 7px color-mix(in srgb, var(--coral) 12%, transparent); }
+.about-intro { padding: 112px 0; border-bottom: 1px solid var(--line); background: var(--surface); }
+.about-intro-layout { display: grid; grid-template-columns: 220px minmax(0, 760px); justify-content: space-between; gap: 70px; }
+.about-section-label { margin: 0; color: var(--muted); font: 10px var(--font-mono); letter-spacing: .16em; }
+.about-section-label span { margin-right: 13px; color: var(--accent); }
+.about-statement { display: flex; flex-direction: column; gap: 25px; }
+.about-statement p { margin: 0; color: var(--copy); font-size: 21px; line-height: 1.95; }
+.about-statement p:first-child { color: var(--foreground); }
+.about-practice { padding: 112px 0; border-bottom: 1px solid var(--line); }
+.about-section-head { display: flex; align-items: end; justify-content: space-between; gap: 40px; margin-bottom: 48px; }
+.about-section-head h2, .about-contact h2 { margin: 0; font-size: clamp(32px, 4vw, 50px); line-height: 1.15; }
+.about-practice-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); }
+.about-practice-item { min-height: 320px; padding: 28px; border-right: 1px solid var(--line); background: var(--surface); }
+.about-practice-item:last-child { border-right: 0; }
+.about-practice-item > div { display: flex; justify-content: space-between; color: var(--accent); font: 11px var(--font-mono); }
+.about-practice-item small { color: var(--muted); letter-spacing: .12em; }
+.about-practice-item h3 { margin: 82px 0 16px; font-size: 25px; }
+.about-practice-item p { max-width: 300px; margin: 0; color: var(--copy); font-size: 14px; line-height: 1.85; }
+.about-contact { padding: 108px 0; background: var(--surface); }
+.about-contact-layout { display: grid; grid-template-columns: 1fr minmax(360px, .8fr); align-items: end; gap: 70px; }
+.about-contact h2 { margin-top: 22px; }
+.about-email { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 22px; border: 1px solid var(--line); background: var(--background); font-size: 20px; font-weight: 720; transition: border-color 160ms ease, color 160ms ease; }
+.about-email:hover { border-color: var(--accent); color: var(--accent); }
+.about-email i { color: var(--accent); font-size: 23px; font-style: normal; }
+
 /* Search */
 .search-trigger { display: inline-flex; height: 38px; align-items: center; gap: 8px; padding: 0 10px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; }
 .search-trigger:hover { border-color: var(--muted); color: var(--foreground); }
@@ -196,7 +234,9 @@ body.lang-zh .lang-en, body.lang-en .lang-zh { display: none !important; }
 .prose img { max-width: 100%; }
 
 .site-footer { padding: 30px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
-.site-footer .page-shell { display: flex; justify-content: space-between; }
+.site-footer .page-shell { display: flex; justify-content: space-between; gap: 28px; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--foreground); }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -209,6 +249,15 @@ body.lang-zh .lang-en, body.lang-en .lang-zh { display: none !important; }
   .stage-grid { grid-template-columns: 1fr; }
   .stage-item { min-height: 240px; border-right: 0; border-bottom: 1px solid var(--line); }
   .stage-item:last-child { border-bottom: 0; }
+  .about-hero-layout { grid-template-columns: 1fr; }
+  .about-mark { width: min(100%, 440px); justify-self: center; }
+  .about-intro-layout { grid-template-columns: 1fr; gap: 38px; }
+  .about-practice-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-practice-item { min-height: 250px; border-bottom: 1px solid var(--line); }
+  .about-practice-item:nth-child(2n) { border-right: 0; }
+  .about-practice-item:nth-last-child(-n + 2) { border-bottom: 0; }
+  .about-practice-item h3 { margin-top: 50px; }
+  .about-contact-layout { grid-template-columns: 1fr; align-items: start; }
 }
 
 @media (max-width: 640px) {
@@ -222,6 +271,21 @@ body.lang-zh .lang-en, body.lang-en .lang-zh { display: none !important; }
   .search-trigger:not(.search-trigger-prominent) { width: 36px; padding: 0; justify-content: center; }
   .search-trigger:not(.search-trigger-prominent) > span, .search-trigger:not(.search-trigger-prominent) kbd { display: none !important; }
   .home-hero { padding-top: 64px; }
+  .about-page { padding-top: 64px; }
+  .about-hero { min-height: 0; }
+  .about-grid { background-size: 48px 48px; }
+  .about-hero-layout { gap: 52px; padding-block: 62px 48px; }
+  .about-heading h1 { font-size: 43px; }
+  .about-mark > strong { font-size: 70px; }
+  .about-intro, .about-practice, .about-contact { padding: 72px 0; }
+  .about-statement p { font-size: 17px; line-height: 1.9; }
+  .about-section-head { align-items: start; flex-direction: column; }
+  .about-practice-grid { grid-template-columns: 1fr; }
+  .about-practice-item { border-right: 0; }
+  .about-practice-item:nth-last-child(-n + 2) { border-bottom: 1px solid var(--line); }
+  .about-practice-item:last-child { border-bottom: 0; }
+  .about-contact-layout { gap: 34px; }
+  .about-email { min-width: 0; min-height: 66px; padding-inline: 15px; font-size: 16px; }
   .hero-grid { top: 64px; background-size: 48px 48px; }
   .hero-layout { min-height: 0; gap: 58px; padding: 62px 0 52px; }
   .hero-content h1 { margin-top: 20px; font-size: 44px; line-height: 1.06; }

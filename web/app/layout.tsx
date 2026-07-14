@@ -20,7 +20,7 @@ function Navbar() {
         <div className="nav-center">
           <Link href="/#atlas"><span className="lang-zh">认知路径</span><span className="lang-en">Path</span></Link>
           <Link href="/category/cognitive-science/"><span className="lang-zh">全部文章</span><span className="lang-en">Articles</span></Link>
-          <a href="https://github.com/jianminbai/cognix" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <Link href="/about/"><span className="lang-zh">关于我</span><span className="lang-en">About</span></Link>
         </div>
         <NavbarActions />
       </div>
@@ -35,7 +35,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Navbar />
         <main>{children}</main>
         <footer className="site-footer">
-          <div className="page-shell"><span>JmBai © {new Date().getFullYear()}</span><span>保持观察，持续校准。</span></div>
+          <div className="page-shell">
+            <span>JmBai © {new Date().getFullYear()}</span>
+            <span><span className="lang-zh">保持观察，持续校准。</span><span className="lang-en">Observe. Calibrate. Compound.</span></span>
+          </div>
         </footer>
       </body>
     </html>
