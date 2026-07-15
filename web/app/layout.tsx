@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { NavbarActions } from "@/components/navbar-actions";
+import { MobileMenu } from "@/components/mobile-menu";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +23,10 @@ function Navbar() {
           <Link href="/category/cognitive-science/"><span className="lang-zh">全部文章</span><span className="lang-en">Articles</span></Link>
           <Link href="/about/"><span className="lang-zh">关于我</span><span className="lang-en">About</span></Link>
         </div>
-        <NavbarActions />
+        <div className="nav-actions">
+          <NavbarActions />
+          <MobileMenu />
+        </div>
       </div>
     </nav>
   );

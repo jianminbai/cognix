@@ -66,6 +66,17 @@ body.lang-zh .lang-en, body.lang-en .lang-zh { display: none !important; }
 .preference-controls { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid var(--line); background: var(--surface); }
 .preference-button { width: 31px; height: 31px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 800; }
 .preference-button:hover { background: var(--surface-2); color: var(--foreground); }
+.nav-actions { display: inline-flex; align-items: center; gap: 12px; }
+.mobile-menu { display: none; }
+.nav-toggle { display: inline-flex; flex-direction: column; justify-content: center; gap: 4px; width: 34px; height: 34px; padding: 0 7px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; }
+.nav-toggle-bar { display: block; height: 2px; width: 100%; background: var(--foreground); transition: transform 180ms ease, opacity 150ms ease; }
+.nav-toggle-bar[data-open="true"]:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-toggle-bar[data-open="true"]:nth-child(2) { opacity: 0; }
+.nav-toggle-bar[data-open="true"]:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.mobile-nav-backdrop { position: fixed; inset: 0; z-index: -1; background: transparent; }
+.mobile-nav-panel { position: absolute; top: 100%; left: 0; right: 0; display: flex; flex-direction: column; padding: 8px; border-bottom: 1px solid var(--line); background: var(--surface); backdrop-filter: blur(18px); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32); }
+.mobile-nav-panel a { padding: 14px 12px; color: var(--copy); font-size: 15px; font-weight: 650; border-radius: 6px; }
+.mobile-nav-panel a:hover { background: var(--surface-2); color: var(--foreground); }
 
 /* Home */
 .home-hero { position: relative; min-height: 760px; padding-top: 72px; overflow: hidden; border-bottom: 1px solid var(--line); }
@@ -242,6 +253,7 @@ body.lang-zh .lang-en, body.lang-en .lang-zh { display: none !important; }
 
 @media (max-width: 900px) {
   .nav-center { display: none; }
+  .mobile-menu { display: inline-flex; }
   .nav-inner { grid-template-columns: 1fr auto; }
   .hero-layout { grid-template-columns: 1fr; padding-top: 72px; }
   .thinking-map { width: min(100%, 470px); justify-self: center; }
