@@ -49,15 +49,6 @@ export function MobileMenu() {
               <span className="lang-zh">关于我</span>
               <span className="lang-en">About</span>
             </Link>
-            <a
-              href="https://github.com/jianminbai/cognix"
-              target="_blank"
-              rel="noopener noreferrer"
-              role="menuitem"
-              onClick={() => setOpen(false)}
-            >
-              GitHub
-            </a>
           </div>
         </>
       ) : null}
