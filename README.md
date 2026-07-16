@@ -40,6 +40,10 @@ cognix/
 - [重写"黑天鹅"](./cognitive-science/black-swan-rewritten.md)：用幂律分布、自组织临界性、龙王事件、Scheffer 早期预警与网络级联，把"黑天鹅"从不可知论的天鹅复原为可识别的系统脆弱性。
 - [重写"技术不是中性的"](./cognitive-science/technology-is-not-neutral-rewritten.md)：跨越现象学、建构主义、政治经济学、批判理论、女性主义、后殖民、算法治理七条脉络，把"技术非中性"展开为十种可识别机制。
 - [把问题问对 vs 把答案做对](./cognitive-science/asking-vs-answering.md)：把"答案导向"与"问题导向"两种思考方式拆成时间尺度上的分工，给出"写出三个版本的问题、把假设分离、用无效事件做反馈、半年做问题层复盘"的可执行清单，识别工业化奖励机制造成的认知偏置。
+- [重写"概率思维"](./cognitive-science/probabilistic-thinking-rewritten.md)：用休谟归纳、贝叶斯定理、信号检测理论、超预测运动、Knight 不确定性与 Ellsberg 悖论，把"概率思维"从态度修辞重构为预注册、Brier 分数、四类不确定性分工的认知工程，并用十大重构把概率思维从个人修辞推向组织能力。
+- [重写"习惯系统"](./cognitive-science/habit-system-rewritten.md)：用基底神经节回路、S-O-R 模型、Lally 66 天曲线、ego depletion 的批评、Kahneman 双系统、强化学习、SDT 与 Wood-Rünger 习惯梯度，把习惯从"靠意志力每天重复"的修辞重构为环境默认 + 提示架构 + 行为粒度 + 反馈循环的回路工程。
+- [重写"语言塑造思维"](./cognitive-science/language-shapes-thought-rewritten.md)：用 Sapir-Whorf 假说的可证伪化、Slobin 为说而思、Berlin-Kay 颜色范畴与俄蓝效应、Levinson 空间框架、Boroditsky 时间隐喻、中文心智算盘、Lakoff 概念隐喻、Bialystok 双语神经科学、Gendron 命名范畴与神经语义网络，把"语言塑造思维"从文化相对主义口号重构为个人 / 对话 / 写作 / 组织四层的范畴工程。
+- [重写"死亡认知"](./cognitive-science/death-cognition-rewritten.md)：用 Becker-Solomon 恐怖管理理论、Greenberg 死亡凸显效应、Nagy 三阶段、Yalom 存在主义四终极、神经科学自我相关性、跨文化差异、Routledge 拔高 vs 蘑菇双效应、后创伤成长(PTG)与临床姑息医学,把"死亡认知"从存在主义修辞重构为盘点 → 凸显练习 → 记忆基础设施 → 制度协同四阶段的生命密度工程,并与"黑天鹅""概率思维""习惯系统""语言工程"形成认知三角的边界。
 
 ## 知识复利原则
 

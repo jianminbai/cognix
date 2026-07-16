@@ -28,6 +28,10 @@
 | [labor-capital-relations-rewritten.md](./labor-capital-relations-rewritten.md) | 重写劳动与资本的关系 | 从剩余价值、Piketty 的 r>g、监控资本主义、社会再生产四套框架，把劳动-资本关系从"等价交换"还原为五维非对称让渡。 |
 | [black-swan-rewritten.md](./black-swan-rewritten.md) | 重写"黑天鹅" | 用幂律分布、自组织临界性、龙王事件、Scheffer 早期预警与网络级联，把"黑天鹅"从不可知论的天鹅复原为可识别的系统脆弱性。 |
 | [technology-is-not-neutral-rewritten.md](./technology-is-not-neutral-rewritten.md) | 重写"技术不是中性的" | 跨越现象学、建构主义、政治经济学、批判理论、女性主义、后殖民、算法治理七条脉络，把"技术非中性"展开为十种可识别机制。 |
+| [probabilistic-thinking-rewritten.md](./probabilistic-thinking-rewritten.md) | 重写"概率思维" | 用休谟归纳、贝叶斯定理、信号检测、超预测、Knight 与 Ellsberg、四类不确定性，把"概率思维"从态度修辞重构为可测量、可训练、可组织的认知工程。 |
+| [habit-system-rewritten.md](./habit-system-rewritten.md) | 重写"习惯系统" | 用基底神经节回路、S-O-R、ego depletion 与它的批评、Lally 66 天曲线、Kahneman 双系统、强化学习、SDT 与 Wood-Rünger 习惯梯度，把习惯从意志力神话重构为环境默认 + 提示架构 + 提示粒度 + 反馈循环的回路工程。 |
+| [language-shapes-thought-rewritten.md](./language-shapes-thought-rewritten.md) | 重写"语言塑造思维" | 用 Sapir-Whorf 假说提纯、Slobin 为说而思、Berlin-Kay 颜色范畴与俄蓝效应、Levinson 空间框架、Boroditsky 时间隐喻、中文心智算盘、Lakoff 概念隐喻、Bialystok 双语神经科学与 Gendron 命名范畴，把"语言塑造思维"从文化相对主义口号重构为四层语言工程。 |
+| [death-cognition-rewritten.md](./death-cognition-rewritten.md) | 重写"死亡认知" | 用 Becker-Solomon 恐怖管理理论、Greenberg 死亡凸显效应、Nagy 三阶段、Yalom 存在主义心理治疗、神经科学自我相关性、跨文化差异、后创伤成长(PTG)与临床姑息医学，把"死亡认知"从存在主义修辞重构为四阶段的生命密度工程。 |
 
 ## 阅读路径
 
@@ -44,6 +48,10 @@
 11. **社会认知与跨维沟通**：读"与不同认知纬度的人打交道"，识别四种核心纬度（抽象↔具体、快↔慢、整体↔局部、情感↔逻辑），学会观察/翻译/等待，让差异变成连接的来源。
 12. **止损的反向复利**：读"论止损的必要性"，把止损从交易技术上升到承认错误的认知勇气，理解截断错误就是保护复利曲线。
 13. **主题投资与事件验证**：读"Optimus 量产与拓普集团投资框架"，把研报里的产业预期拆成产线进度、产量、出货、预期四层可观察变量，并示范如何用"分批 + 事件触发"的方式把模糊判断变成可校准的操作纪律。
+14. **概率思维的科学重构**：读"重写'概率思维'"，用休谟归纳、贝叶斯定理、信号检测、Knight 不确定性与 Ellsberg 悖论，把"概率思维"从态度修辞重构为预注册、Brier 分数、四类不确定性分工的认知工程，并与"决策质量与二阶思维""止损的认知勇气""重写黑天鹅"互为延伸。
+15. **习惯系统的科学重构**：读"重写'习惯系统'"，用基底神经节回路、S-O-R 模型、Lally 66 天曲线、ego depletion 的批评、强化学习与自我决定理论，把习惯从意志力神话重构为环境默认、提示架构、行为粒度、反馈循环四元工程，并与"系统惯性""管的越多错的越多""认知负荷"互为延伸。
+16. **语言塑造思维的科学重构**：读"重写'语言塑造思维'"，用 Sapir-Whorf 假说提纯、Slobin 为说而思、Berlin-Kay 颜色范畴、Levinson 空间框架、Boroditsky 时间隐喻、中文心智算盘、Lakoff 概念隐喻、Bialystok 双语神经科学与 Gendron 命名范畴，把"语言塑造思维"从文化相对主义口号重构为个人 / 对话 / 写作 / 组织四层语言工程，并与"概率思维""习惯系统""跨维沟通""跨阶层对话"互为延伸。
+17. **死亡认知的科学重构**：读"重写'死亡认知'"，用 Becker-Solomon 恐怖管理理论、Greenberg 死亡凸显效应、Nagy 三阶段、Yalom 存在主义四终极、神经科学自我相关性、跨文化差异、Routledge 拔高 vs 蘑菇、后创伤成长(PTG)与临床姑息医学，把"死亡认知"从存在主义修辞重构为盘点 → 凸显 → 记忆基础设施 → 制度协同的四阶段生命密度工程,并与"黑天鹅""概率思维""习惯系统""语言工程"互为延伸。
 
 ## 持续扩展方向
 
