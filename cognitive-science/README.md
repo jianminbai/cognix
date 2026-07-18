@@ -17,6 +17,7 @@
 | [asking-vs-answering.md](./asking-vs-answering.md) | 把问题问对 vs 把答案做对 | 把"答案导向"与"问题导向"两种思考方式拆成时间尺度上的分工，给出可执行的问题层复盘清单。 |
 | [what-problems-should-we-solve.md](./what-problems-should-we-solve.md) | 人应该做什么样的事 | 从真实问题、复利问题、责任半径和结构改善四个坐标，判断什么问题值得投入生命资源。 |
 | [stress-resources-demands.md](./stress-resources-demands.md) | 压力与资源 | 用控制论、需求-控制模型和资源保存理论理解压力管理。 |
+| [effort-success-and-suffering-narrative.md](./effort-success-and-suffering-narrative.md) | 努力、成功与吃苦叙事 | 区分训练、摩擦、伤害与掠夺四类困难，用困难转化率重写“吃苦必然成功”的单线因果。 |
 | [perfectionism-vs-responsibility.md](./perfectionism-vs-responsibility.md) | 完美主义与责任心 | 区分健康责任心与失控完美主义，建立可持续的高标准。 |
 | [dao-de-jing-cognitive-operating-system.md](./dao-de-jing-cognitive-operating-system.md) | 道德经的认知操作系统 | 用控制论、复杂系统与元认知，重读《道德经》的无为、反者道之动、柔弱胜刚强等核心命题。 |
 | [overcontrol-paradox.md](./overcontrol-paradox.md) | 管的越多，错的越多 | 从控制幻觉、二阶后果、自组织与反脆弱，拆解过度干预的隐性代价与"少管多对"的工程基础。 |
